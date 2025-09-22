@@ -1,11 +1,11 @@
 // Initialize the app
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('App initialized');
+    console.log('DOM loaded');
     initializeApp();
 });
 
 function initializeApp() {
-    console.log('Setting up app functionality');
+    console.log('Initializing app');
     
     // Navigation functionality
     setupNavigation();
@@ -22,258 +22,238 @@ function initializeApp() {
     // Balance refresh
     setupBalanceRefresh();
     
-    // Show initial section
-    showSection('games-section');
-}
-
-function showSection(sectionId) {
-    const sections = document.querySelectorAll('.content-section');
-    const navItems = document.querySelectorAll('.nav-item');
-    
-    // Hide all sections
-    sections.forEach(section => {
-        section.classList.remove('active');
-    });
-    
-    // Remove active class from all nav items
-    navItems.forEach(nav => {
-        nav.classList.remove('active');
-    });
-    
-    // Show target section
-    const targetSection = document.getElementById(sectionId);
-    if (targetSection) {
-        targetSection.classList.add('active');
-    }
-    
-    // Activate corresponding nav item
-    const activeNav = document.querySelector([data-section="${sectionId}"]);
-    if (activeNav) {
-        activeNav.classList.add('active');
-    }
+    console.log('App initialized successfully');
 }
 
 function setupNavigation() {
+    console.log('Setting up navigation');
     const navItems = document.querySelectorAll('.nav-item');
-    console.log('Navigation items found:', navItems.length);
+    const sections = document.querySelectorAll('.content-section');
+    
+    console.log(Found ${navItems.length} nav items);
     
     navItems.forEach(item => {
-        item.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
+        item.addEventListener('click', function() {
+            console.log('Nav item clicked:', this.getAttribute('data-section'));
             const targetSection = this.getAttribute('data-section');
-            console.log('Navigation clicked:', targetSection);
             
-            if (targetSection) {
-                showSection(targetSection);
+            // Remove active class from all nav items
+            navItems.forEach(nav => {
+                nav.classList.remove('active');
+            });
+            
+            // Add active class to clicked nav item
+            this.classList.add('active');
+            
+            // Hide all sections
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show target section
+            const targetElement = document.getElementById(targetSection);
+            if (targetElement) {
+                targetElement.classList.add('active');
+                console.log(Showing section: ${targetSection});
+            } else {
+                console.error(Section not found: ${targetSection});
             }
         });
     });
 }
 
 function setupGameCards() {
+    console.log('Setting up game cards');
     const gameCards = document.querySelectorAll('.game-card');
-    console.log('Game cards found:', gameCards.length);
+    
+    console.log(Found ${gameCards.length} game cards);
     
     gameCards.forEach(card => {
-        card.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
+        card.addEventListener('click', function() {
             const botUsername = this.getAttribute('data-bot');
             console.log('Game card clicked:', botUsername);
             
             if (botUsername) {
-                if (window.Telegram && window.Telegram.WebApp) {
-                    // Telegram Mini App environment
-                    window.Telegram.WebApp.openTelegramLink(https://t.me/${botUsername});
-                } else {
-                    // Regular web environment
-                    const confirmed = confirm(Open ${botUsername}?);
-                    if (confirmed) {
-                        window.open(https://t.me/${botUsername}, '_blank');
-                    }
-                }
+                // Simulate opening Telegram bot
+                alert(Opening bot: ${botUsername}\n\nIn real Telegram Mini App, this would open the bot directly.);
+                
+                // For actual Telegram Mini App, use:
+                // if (window.Telegram && window.Telegram.WebApp) {
+                //     window.Telegram.WebApp.openTelegramLink(https://t.me/${botUsername});
+                // }
             }
         });
     });
 }
 
 function setupExchangeCards() {
+    console.log('Setting up exchange cards');
     const exchangeCards = document.querySelectorAll('.exchange-card');
-    console.log('Exchange cards found:', exchangeCards.length);
+    
+    console.log(Found ${exchangeCards.length} exchange cards);
     
     exchangeCards.forEach(card => {
-        card.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
+        card.addEventListener('click', function() {
             const exchangeUrl = this.getAttribute('data-url');
             console.log('Exchange card clicked:', exchangeUrl);
             
             if (exchangeUrl) {
-                if (window.Telegram && window.Telegram.WebApp) {
-                    window.Telegram.WebApp.openLink(exchangeUrl);
-                } else {
-                    const confirmed = confirm(Open ${exchangeUrl}?);
-                    if (confirmed) {
-                        window.open(exchangeUrl, '_blank');
-                    }
-                }
+                // Open exchange URL in new tab
+                window.open(exchangeUrl, '_blank');
+                
+                // For Telegram Mini App, use:
+                // if (window.Telegram && window.Telegram.WebApp) {
+                //     window.Telegram.WebApp.openLink(exchangeUrl);
+                // }
             }
         });
     });
 }
+
 function setupReferralLink() {
+    console.log('Setting up referral link');
     const copyBtn = document.getElementById('copy-btn');
     const referralInput = document.getElementById('referral-input');
-    const notification = document.getElementById('notification');
+    if (!copyBtn) {
+        console.error('Copy button not found!');
+        return;
+    }
     
-    if (copyBtn && referralInput && notification) {
-        console.log('Referral link setup complete');
+    if (!referralInput) {
+        console.error('Referral input not found!');
+        return;
+    }
+    
+    console.log('Referral elements found');
+    
+    copyBtn.addEventListener('click', function() {
+        console.log('Copy button clicked');
         
-        copyBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            console.log('Copy button clicked');
-            
-            // Select the text field
-            referralInput.select();
-            referralInput.setSelectionRange(0, 99999);
-            
-            // Copy using modern API with fallback
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(referralInput.value).then(function() {
-                    showNotification('Link copied to clipboard!');
-                }).catch(function(err) {
-                    console.error('Clipboard API error:', err);
-                    fallbackCopy();
-                });
-            } else {
-                fallbackCopy();
+        // Select the text field
+        referralInput.select();
+        referralInput.setSelectionRange(0, 99999);
+        
+        // Copy the text
+        navigator.clipboard.writeText(referralInput.value).then(function() {
+            console.log('Text copied successfully');
+            showNotification('Link copied to clipboard!');
+        }).catch(function(err) {
+            console.error('Failed to copy text: ', err);
+            // Fallback for older browsers
+            try {
+                document.execCommand('copy');
+                console.log('Text copied using fallback method');
+                showNotification('Link copied to clipboard!');
+            } catch (e) {
+                console.error('Fallback copy failed: ', e);
+                showNotification('Failed to copy link');
             }
         });
-        
-        function fallbackCopy() {
-            try {
-                const successful = document.execCommand('copy');
-                if (successful) {
-                    showNotification('Link copied to clipboard!');
-                } else {
-                    showNotification('Failed to copy link');
-                }
-            } catch (err) {
-                console.error('Fallback copy error:', err);
-                showNotification('Error copying link');
-            }
-        }
-        
-        function showNotification(message) {
-            notification.textContent = message;
-            notification.classList.add('show');
-            
-            setTimeout(function() {
-                notification.classList.remove('show');
-            }, 2000);
-        }
-    } else {
-        console.warn('Referral elements not found');
-    }
+    });
 }
 
 function setupBalanceRefresh() {
+    console.log('Setting up balance refresh');
     const refreshBtn = document.querySelector('.balance-refresh');
-    const balanceAmount = document.querySelector('.amount');
     
-    if (refreshBtn && balanceAmount) {
-        console.log('Balance refresh setup complete');
-        
-        refreshBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            console.log('Balance refresh clicked');
-            
-            // Add rotation animation
-            this.style.transition = 'transform 0.3s ease';
-            this.style.transform = 'rotate(360deg)';
-            
-            // Simulate API call
-            setTimeout(() => {
-                this.style.transform = 'rotate(0deg)';
-                
-                const currentBalance = parseInt(balanceAmount.textContent.replace(',', '')) || 1540;
-                const randomChange = Math.floor(Math.random() * 10) - 2; // -2 to +7
-                const newBalance = Math.max(1000, currentBalance + randomChange);
-                
-                balanceAmount.textContent = newBalance.toLocaleString();
-                
-                const usdValue = (newBalance * 0.01).toFixed(2);
-                const usdElement = document.querySelector('.balance-equivalent');
-                if (usdElement) {
-                    usdElement.textContent = ≈ $${usdValue};
-                }
-            }, 1000);
-        });
-    } else {
-        console.warn('Balance refresh elements not found');
+    if (!refreshBtn) {
+        console.error('Refresh button not found!');
+        return;
     }
-}
-
-// Enhanced Telegram Web App integration
-function initTelegramWebApp() {
-    if (window.Telegram && window.Telegram.WebApp) {
-        console.log('Telegram WebApp detected');
+    
+    console.log('Refresh button found');
+    
+    refreshBtn.addEventListener('click', function() {
+        console.log('Refresh button clicked');
+        const balanceAmount = document.querySelector('.amount');
         
-        // Expand the app to full height
-  window.Telegram.WebApp.expand();
-        
-        // Set theme parameters
-        const themeParams = window.Telegram.WebApp.themeParams;
-        if (themeParams) {
-            document.documentElement.style.setProperty('--tg-theme-bg-color', themeParams.bg_color || '#ffffff');
-            document.documentElement.style.setProperty('--tg-theme-text-color', themeParams.text_color || '#000000');
-            document.documentElement.style.setProperty('--tg-theme-button-color', themeParams.button_color || '#667eea');
-            document.documentElement.style.setProperty('--tg-theme-button-text-color', themeParams.button_text_color || '#ffffff');
+        if (!balanceAmount) {
+            console.error('Balance amount element not found!');
+            return;
         }
         
-        // Enable closing confirmation
-        window.Telegram.WebApp.enableClosingConfirmation();
+        // Add rotation animation
+        this.style.transition = 'transform 0.3s ease';
+        this.style.transform = 'rotate(360deg)';
         
-        // Back button handling
-        window.Telegram.WebApp.BackButton.onClick(function() {
-            window.Telegram.WebApp.close();
-        });
-    } else {
-        console.log('Regular browser environment');
-    }
-}
-
-// Initialize Telegram integration
-initTelegramWebApp();
-
-// Add hover effects for desktop
-function addHoverEffects() {
-    const cards = document.querySelectorAll('.game-card, .exchange-card');
-    cards.forEach(card => {
-        card.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-2px)';
-        });
-        
-        card.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0)';
-        });
+        // Simulate balance update
+        setTimeout(() => {
+            // Reset rotation
+            this.style.transform = 'rotate(0deg)';
+            
+            // Simulate small balance change for demo
+            const currentBalance = parseInt(balanceAmount.textContent.replace(',', ''));
+            const randomChange = Math.floor(Math.random() * 10) - 2; // -2 to +7
+            const newBalance = Math.max(0, currentBalance + randomChange);
+            
+            balanceAmount.textContent = newBalance.toLocaleString();
+            
+            // Update equivalent USD value
+            const usdValue = (newBalance * 0.01).toFixed(2);
+            const usdElement = document.querySelector('.balance-equivalent');
+            if (usdElement) {
+                usdElement.textContent = ≈ $${usdValue};
+            }
+            
+            console.log(Balance updated to: ${newBalance});
+        }, 1000);
     });
 }
 
-// Initialize hover effects
-addHoverEffects();
+function showNotification(message) {
+    console.log('Showing notification:', message);
+    const notification = document.getElementById('notification');
+    
+    if (!notification) {
+        console.error('Notification element not found!');
+        return;
+    }
+    
+    notification.textContent = message;
+    notification.classList.add('show');
+    
+    setTimeout(function() {
+        notification.classList.remove('show');
+    }, 2000);
+}
 
-// Error handling
-window.addEventListener('error', function(e) {
-    console.error('Global error:', e.error);
-});
+// Add error handling for missing elements
+function checkElements() {
+    const requiredElements = [
+        'games-section', 'wallet-section', 'profile-section',
+        'referral-input', 'copy-btn', 'notification'
+    ];
+    
+    requiredElements.forEach(id => {
+        const element = document.getElementById(id);
+        if (!element) {
+            console.error(Element with id '${id}' not found!);
+        } else {
+            console.log(Element '${id}' found);
+        }
+    });
+}
 
-console.log('App setup completed successfully');
+// Check elements on load
+setTimeout(checkElements, 100);
+// Simulate user activity for demo
+function simulateUserActivity() {
+    setInterval(() => {
+        const balanceElement = document.querySelector('.amount');
+        if (balanceElement) {
+            const currentBalance = parseInt(balanceElement.textContent.replace(',', ''));
+            const randomIncrease = Math.floor(Math.random() * 2); // 0 or 1
+            const newBalance = currentBalance + randomIncrease;
+            balanceElement.textContent = newBalance.toLocaleString();
+            
+            const usdValue = (newBalance * 0.01).toFixed(2);
+            const usdElement = document.querySelector('.balance-equivalent');
+            if (usdElement) {
+                usdElement.textContent = ≈ $${usdValue};
+            }
+        }
+    }, 30000);
+}
+
+// Start simulation after a delay
+setTimeout(simulateUserActivity, 5000);
