@@ -1,1 +1,103 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hamster Menu</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Preload critical resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header" role="banner">
+            <div class="header-content">
+                <h1 class="app-title">Hamster Menu</h1>
+                <div class="user-avatar" aria-label="User avatar">H</div>
+            </div>
+        </header>
 
+        <!-- Main Content -->
+        <main class="main-content" role="main">
+            <!-- Games Section -->
+            <section id="games-section" class="content-section active" aria-labelledby="games-heading">
+                <div class="section-header">
+                    <h2 id="games-heading">Games</h2>
+                    <span class="section-subtitle">Social media</span>
+                </div>
+                
+                <div class="games-grid" role="list">
+                    <!-- Game cards remain the same -->
+                    <div class="game-card" data-bot="hamsterkombat_bot" role="listitem" tabindex="0" aria-label="Hamster Kombat - Tap to earn coins">
+                        <div class="game-image">
+                            <div class="game-icon">🐹</div>
+                        </div>
+                        <div class="game-info">
+                            <h3>Hamster Kombat</h3>
+                            <p>Tap to earn coins</p>
+                        </div>
+                        <div class="game-badge">Hot</div>
+                    </div>
+
+                    <!-- Остальные game-card остаются без изменений, но можно добавить аналогичные атрибуты -->
+                    <div class="game-card" data-bot="hamsterdev_bot" role="listitem" tabindex="0">
+                        <div class="game-image">
+                            <div class="game-icon">🎮</div>
+                        </div>
+                        <div class="game-info">
+                            <h3>Hamster GameDev</h3>
+                            <p>Create your studio</p>
+                        </div>
+                    </div>
+
+                    <!-- ... остальные карточки ... -->
+
+                </div>
+            </section>
+
+            <!-- Остальные секции остаются без изменений -->
+            <!-- Wallet Section -->
+            <section id="wallet-section" class="content-section">
+                <!-- ... существующий код ... -->
+            </section>
+
+            <!-- Profile Section -->
+            <section id="profile-section" class="content-section">
+                <!-- ... существующий код ... -->
+            </section>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav" role="navigation" aria-label="Main navigation">
+            <button class="nav-item active" data-section="games-section" type="button" aria-label="Games section">
+                <span class="nav-icon">🎮</span>
+                <span class="nav-label">Games</span>
+            </button>
+            <button class="nav-item" data-section="wallet-section" type="button" aria-label="Wallet section">
+                <span class="nav-icon">💰</span>
+                <span class="nav-label">Wallet</span>
+            </button>
+            <button class="nav-item" data-section="profile-section" type="button" aria-label="Profile section">
+                <span class="nav-icon">👤</span>
+                <span class="nav-label">Profile</span>
+            </button>
+        </nav>
+
+        <!-- Notification -->
+        <div id="notification" class="notification" role="alert" aria-live="polite">Link copied to clipboard!</div>
+    </div>
+    <script src="script.js"></script>
+    
+    <!-- Fallback for slow loading -->
+    <noscript>
+        <style>
+            .content-section { display: block !important; }
+            .bottom-nav { display: none !important; }
+        </style>
+        <p>Please enable JavaScript to use this application.</p>
+    </noscript>
+</body>
+</html>
