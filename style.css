@@ -1,4 +1,4 @@
-/* Chart Container */
+/* Real-time Chart Styles */
 .chart-container {
     background: #ffffff;
     border-radius: 20px;
@@ -11,18 +11,18 @@
 .chart-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     margin-bottom: 15px;
 }
 
 .price-info {
     display: flex;
-    align-items: center;
-    gap: 10px;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .current-price {
-    font-size: 24px;
+    font-size: 28px;
     font-weight: 700;
     color: #1a1a1a;
 }
@@ -30,8 +30,9 @@
 .price-change {
     padding: 4px 8px;
     border-radius: 6px;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 600;
+    width: fit-content;
 }
 
 .price-change.positive {
@@ -68,25 +69,69 @@
     color: white;
 }
 
-.timeframe-btn:not(.active):hover {
-    background: #e9ecef;
+.chart-wrapper {
+    position: relative;
+    height: 250px;
+    width: 100%;
 }
 
 #priceChart {
     width: 100% !important;
-    height: 200px !important;
+    height: 100% !important;
 }
 
-/* Balance Actions */
+/* Balance Info (упрощенная версия) */
+.balance-info {
+    background: #f8f9fa;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #e9ecef;
+}
+
+.balance-item {
+    margin-bottom: 15px;
+}
+
+.balance-label {
+    display: block;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.balance-amount {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.amount {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+.currency {
+    font-size: 16px;
+    color: #666;
+}
+
+.balance-equivalent {
+    font-size: 14px;
+    color: #666;
+}
+
 .balance-actions {
     display: flex;
     gap: 10px;
-    margin-top: 15px;
 }
 
 .action-btn {
     flex: 1;
-    padding: 10px 16px;
+    padding: 12px 16px;
     border: none;
     border-radius: 12px;
     font-weight: 600;
@@ -106,7 +151,7 @@
 }
 
 .transfer-btn {
-    background: #f8f9fa;
+    background: #ffffff;
     color: #666;
     border: 1px solid #e9ecef;
 }
@@ -145,7 +190,14 @@
     color: #1a1a1a;
 }
 
-/* Exchange Cards Enhanced */
+/* Exchange Cards */
+.exchanges-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
 .exchange-card {
     background: #f8f9fa;
     border-radius: 16px;
@@ -156,8 +208,6 @@
     transition: all 0.3s ease;
     border: 1px solid #e9ecef;
     cursor: pointer;
-    -webkit-user-select: none;
-    user-select: none;
 }
 
 .exchange-logo {
@@ -170,14 +220,6 @@
     font-weight: 700;
     color: white;
     font-size: 16px;
-    position: relative;
-    overflow: hidden;
-}
-
-.exchange-logo img {
-    width: 24px;
-    height: 24px;
-    object-fit: contain;
 }
 
 .exchange-info {
@@ -214,102 +256,56 @@
     margin-top: 2px;
 }
 
-/* Quick Actions */
-.quick-actions {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin-top: 20px;
-}
-
-.quick-btn {
-    background: #f8f9fa;
-    border: 1px solid #e9ecef;
-    border-radius: 12px;
-    padding: 12px 8px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 12px;
-    font-weight: 500;
+.exchange-arrow {
     color: #666;
+    font-size: 18px;
 }
 
-.quick-btn:active {
-    transform: scale(0.95);
-    background: #e9ecef;
+/* Price update animations */
+@keyframes priceUp {
+    0% { color: #1a1a1a; }
+    50% { color: #00c851; }
+    100% { color: #1a1a1a; }
 }
 
-.quick-icon {
-    font-size: 16px;
+@keyframes priceDown {
+    0% { color: #1a1a1a; }
+    50% { color: #ff4444; }
+    100% { color: #1a1a1a; }
 }
 
-/* Responsive Adjustments */
+.price-up {
+    animation: priceUp 0.5s ease;
+}
+
+.price-down {
+    animation: priceDown 0.5s ease;
+}
+
+/* Responsive */
 @media (max-width: 480px) {
     .chart-container {
         padding: 15px;
-        margin-bottom: 15px;
     }
     
     .current-price {
+        font-size: 24px;
+    }
+    
+    .chart-wrapper {
+        height: 200px;
+    }
+    
+    .balance-info {
+        padding: 15px;
+    }
+    
+    .amount {
         font-size: 20px;
     }
     
-    .timeframe-btn {
-        padding: 4px 8px;
-        font-size: 11px;
-    }
-    
-    #priceChart {
-        height: 180px !important;
-    }
-    
-    .balance-actions {
-        gap: 8px;
-    }
-    
     .action-btn {
-        padding: 8px 12px;
+        padding: 10px 12px;
         font-size: 13px;
     }
-    
-    .exchange-card {
-        padding: 12px;
-        gap: 10px;
-    }
-    
-    .exchange-logo {
-        width: 40px;
-        height: 40px;
-    }
-}
-
-/* Chart animations */
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.chart-container {
-    animation: slideUp 0.5s ease;
-}
-
-/* Price ticker animation */
-@keyframes pricePulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
-}
-
-.price-update {
-    animation: pricePulse 0.3s ease;
 }
