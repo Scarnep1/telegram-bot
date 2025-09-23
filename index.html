@@ -8,6 +8,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Chart.js для графика -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="app-container">
@@ -77,144 +79,149 @@
             <section id="wallet-section" class="content-section">
                 <div class="section-header">
                     <h2>Wallet</h2>
-                    <span class="section-subtitle">Your balance & exchanges</span>
+                    <span class="section-subtitle">HMSTR price & your balance</span>
                 </div>
                 
+                <!-- Price Chart -->
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <div class="price-info">
+                            <div class="current-price">$0.0102</div>
+                            <div class="price-change positive">+2.4%</div>
+                        </div>
+                        <div class="timeframes">
+                            <button class="timeframe-btn active" data-timeframe="1h">1H</button>
+                            <button class="timeframe-btn" data-timeframe="24h">24H</button>
+                            <button class="timeframe-btn" data-timeframe="7d">7D</button>
+                            <button class="timeframe-btn" data-timeframe="1m">1M</button>
+                        </div>
+                    </div>
+                    <canvas id="priceChart"></canvas>
+                </div>
+
+                <!-- Balance Card -->
                 <div class="balance-card">
                     <div class="balance-header">
-                        <span>Total Balance</span>
+                        <span>Your Balance</span>
                         <span class="balance-refresh">↻</span>
                     </div>
                     <div class="balance-amount">
                         <span class="amount">1,500</span>
                         <span class="currency">HMSTR</span>
                     </div>
-                    <div class="balance-equivalent">≈ $15.00</div>
+                    <div class="balance-equivalent">≈ $15.30</div>
+                    
+                    <div class="balance-actions">
+                        <button class="action-btn buy-btn">Buy</button>
+                        <button class="action-btn sell-btn">Sell</button>
+                        <button class="action-btn transfer-btn">Transfer</button>
+                    </div>
                 </div>
 
+                <!-- Market Stats -->
+                <div class="market-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Market Cap</span>
+                        <span class="stat-value">$102M</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">24h Volume</span>
+                        <span class="stat-value">$5.2M</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Rank</span>
+                        <span class="stat-value">#245</span>
+                    </div>
+                </div>
+
+                <!-- Exchanges Section -->
                 <div class="section-subheader">
                     <h3>Buy HMSTR on Exchanges</h3>
-                    <span class="section-subtitle">Available markets</span>
+                    <span class="section-subtitle">Best prices & low fees</span>
                 </div>
                 
                 <div class="exchanges-list">
                     <div class="exchange-card" data-url="https://www.bybit.com/trade-spot/HMSTR/USDT">
-                        <div class="exchange-logo" style="background: linear-gradient(135deg, #00c0f3, #0066ff);">B</div>
+                        <div class="exchange-logo" style="background: linear-gradient(135deg, #00c0f3, #0066ff);">
+                            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAiIGhlaWdodD0iMzAiIHZpZXdCb3g9IjAgMCAzMCAzMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTUiIGN5PSIxNSIgcj0iMTUiIGZpbGw9IiMwMGMwZjMiLz4KPHBhdGggZD0iTTEwIDhIMjBWMjJIMTBWOFoiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0xMiAxMEgxOFYxMkgxMloiIGZpbGw9IiMwMDY2ZmYiLz4KPC9zdmc+" alt="Bybit">
+                        </div>
                         <div class="exchange-info">
                             <h3>Bybit</h3>
-                            <p>Spot trading • High liquidity</p>
+                            <p>$0.0101 • 0.1% fee</p>
+                        </div>
+                        <div class="exchange-price">
+                            <span class="price">$0.0101</span>
+                            <span class="volume">High volume</span>
                         </div>
                         <div class="exchange-arrow">→</div>
                     </div>
 
                     <div class="exchange-card" data-url="https://www.mexc.com/exchange/HMSTR_USDT">
-                        <div class="exchange-logo" style="background: linear-gradient(135deg, #00c851, #007e33);">M</div>
+                        <div class="exchange-logo" style="background: linear-gradient(135deg, #00c851, #007e33);">
+                            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAiIGhlaWdodD0iMzAiIHZpZXdCb3g9IjAgMCAzMCAzMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTUiIGN5PSIxNSIgcj0iMTUiIGZpbGw9IiMwMGM4NTEiLz4KPHBhdGggZD0iTTggOEgyMlYyMkg4VjhaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNMTAgMTBIMjBWMjBIMTBWMTBaIiBmaWxsPSIjMDA3ZTMzIi8+Cjwvc3ZnPg==" alt="MEXC">
+                        </div>
                         <div class="exchange-info">
                             <h3>MEXC</h3>
-                            <p>Zero maker fees • Fast registration</p>
+                            <p>$0.0102 • 0% maker fee</p>
+                        </div>
+                        <div class="exchange-price">
+                            <span class="price">$0.0102</span>
+                            <span class="volume">Zero fees</span>
                         </div>
                         <div class="exchange-arrow">→</div>
                     </div>
 
                     <div class="exchange-card" data-url="https://www.binance.com/trade/HMSTR_USDT">
-                        <div class="exchange-logo" style="background: linear-gradient(135deg, #f0b90b, #f8d12f);">B</div>
+                        <div class="exchange-logo" style="background: linear-gradient(135deg, #f0b90b, #f8d12f);">
+                            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAiIGhlaWdodD0iMzAiIHZpZXdCb3g9IjAgMCAzMCAzMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTUiIGN5PSIxNSIgcj0iMTUiIGZpbGw9IiNmMGI5MGIiLz4KPHBhdGggZD0iTTEwIDhIMjBWMjJIMTBWOFoiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0xMiAxMEgxOFYyMEgxMlYxMFoiIGZpbGw9IiNmOGQxMmYiLz4KPC9zdmc+" alt="Binance">
+                        </div>
                         <div class="exchange-info">
                             <h3>Binance</h3>
-                            <p>Largest volume • Advanced tools</p>
+                            <p>$0.0103 • 0.1% fee</p>
+                        </div>
+                        <div class="exchange-price">
+                            <span class="price">$0.0103</span>
+                            <span class="volume">Best liquidity</span>
                         </div>
                         <div class="exchange-arrow">→</div>
                     </div>
 
                     <div class="exchange-card" data-url="https://www.okx.com/trade-spot/HMSTR-USDT">
-                        <div class="exchange-logo" style="background: linear-gradient(135deg, #000000, #4a4a4a);">O</div>
+                        <div class="exchange-logo" style="background: linear-gradient(135deg, #000000, #4a4a4a);">
+                            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAiIGhlaWdodD0iMzAiIHZpZXdCb3g9IjAgMCAzMCAzMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTUiIGN5PSIxNSIgcj0iMTUiIGZpbGw9IiMwMDAwMDAiLz4KPHBhdGggZD0iTTggOEgyMlYyMkg4VjhaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNMTAgMTBIMjBWMjBIMTBWMTBaIiBmaWxsPSIjNGE0YTRhIi8+Cjwvc3ZnPg==" alt="OKX">
+                        </div>
                         <div class="exchange-info">
                             <h3>OKX</h3>
-                            <p>Secure platform • Staking available</p>
+                            <p>$0.0101 • 0.08% fee</p>
+                        </div>
+                        <div class="exchange-price">
+                            <span class="price">$0.0101</span>
+                            <span class="volume">Secure</span>
                         </div>
                         <div class="exchange-arrow">→</div>
                     </div>
                 </div>
-                
-                <div class="referral-section">
-                    <h3>Referral Link</h3>
-                    <p>Invite friends and earn 10% from their rewards</p>
-                    <div class="referral-link">
-                        <input type="text" id="referral-input" value="https://t.me/hamsterbot?start=ref123" readonly>
-                        <button id="copy-btn">Copy</button>
-                    </div>
-                    <div class="referral-stats">
-                        <div class="stat-item">
-                            <span class="stat-number">15</span>
-                            <span class="stat-label">Referred</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number">500</span>
-                            <span class="stat-label">Earned HMSTR</span>
-                        </div>
-                    </div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <button class="quick-btn">
+                        <span class="quick-icon">📊</span>
+                        <span>Portfolio</span>
+                    </button>
+                    <button class="quick-btn">
+                        <span class="quick-icon">🔔</span>
+                        <span>Alerts</span>
+                    </button>
+                    <button class="quick-btn">
+                        <span class="quick-icon">📈</span>
+                        <span>Analytics</span>
+                    </button>
                 </div>
             </section>
 
             <!-- Profile Section -->
             <section id="profile-section" class="content-section">
-                <div class="section-header">
-                    <h2>Profile</h2>
-                    <span class="section-subtitle">Your account settings</span>
-                </div>
-                
-                <div class="profile-header">
-                    <div class="profile-avatar" id="profile-avatar">U</div>
-                    <div class="profile-info">
-                        <h2 id="profile-name">Telegram User</h2>
-                        <p id="profile-username">@username</p>
-                    </div>
-                </div>
-
-                <div class="profile-stats">
-                    <div class="stat-card">
-                        <div class="stat-icon">🎮</div>
-                        <div class="stat-info">
-                            <span class="stat-value">4</span>
-                            <span class="stat-label">Active Games</span>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">📅</div>
-                        <div class="stat-info">
-                            <span class="stat-value">15</span>
-                            <span class="stat-label">Days in App</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="profile-actions">
-                    <div class="action-card">
-                        <div class="action-icon">⚙️</div>
-                        <div class="action-info">
-                            <h3>Settings</h3>
-                            <p>App preferences</p>
-                        </div>
-                        <div class="action-arrow">→</div>
-                    </div>
-                    
-                    <div class="action-card">
-                        <div class="action-icon">🔄</div>
-                        <div class="action-info">
-                            <h3>Sync Data</h3>
-                            <p>Update from Telegram</p>
-                        </div>
-                        <div class="action-arrow">→</div>
-                    </div>
-                    
-                    <div class="action-card">
-                        <div class="action-icon">🔒</div>
-                        <div class="action-info">
-                            <h3>Privacy</h3>
-                            <p>Data protection</p>
-                        </div>
-                        <div class="action-arrow">→</div>
-                    </div>
-                </div>
+                <!-- ... существующий код профиля ... -->
             </section>
         </main>
 
@@ -237,7 +244,7 @@
         <!-- Notification -->
         <div id="notification" class="notification" role="alert" aria-live="polite"></div>
     </div>
-    <script src="script.js?v=2"></script>
+    <script src="script.js?v=3"></script>
     
     <noscript>
         <style>
