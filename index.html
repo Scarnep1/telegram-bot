@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Hamster Menu</title>
+    <title>Hamster Verse</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
     <div class="app-container">
         <!-- Header -->
         <header class="header">
             <div class="header-content">
-                <h1 class="app-title">Hamster Menu</h1>
+                <h1 class="app-title">Hamster Verse</h1>
                 <div class="user-avatar" id="user-avatar">H</div>
             </div>
         </header>
@@ -24,11 +25,11 @@
             <section id="games-section" class="content-section active">
                 <div class="section-header">
                     <h2>Games</h2>
-                    <span class="section-subtitle">Play and earn</span>
+                    <span class="section-subtitle">Play and earn HMSTR</span>
                 </div>
                 
                 <div class="games-grid">
-                    <div class="game-card" data-bot="hamsterkombat_bot">
+                    <div class="game-card" data-url="https://t.me/Hamster_GAme_Dev_bot/start?startapp=kentId6823288584">
                         <div class="game-image">
                             <div class="game-icon">🐹</div>
                         </div>
@@ -39,36 +40,42 @@
                         <div class="game-badge">Hot</div>
                     </div>
 
-                    <div class="game-card" data-bot="notcoin_bot">
+                    <div class="game-card" data-url="https://t.me/hamsterking_game_bot?startapp=6823288584">
                         <div class="game-image">
-                            <div class="game-icon">🪙</div>
+                            <div class="game-icon">👑</div>
                         </div>
                         <div class="game-info">
-                            <h3>Notcoin</h3>
-                            <p>Tap to earn</p>
+                            <h3>Hamster King</h3>
+                            <p>Build your kingdom</p>
                         </div>
                     </div>
 
-                    <div class="game-card" data-bot="catizen_bot">
+                    <div class="game-card" data-url="https://t.me/hamster_fightclub_bot?startapp=NWE1YjA2YWUtZTAyMS01ZjA1LTg4ZTYtMGZmZjUwNDQwNjU5">
                         <div class="game-image">
-                            <div class="game-icon">😺</div>
+                            <div class="game-icon">🥊</div>
                         </div>
                         <div class="game-info">
-                            <h3>Catizen</h3>
-                            <p>Raise cats</p>
+                            <h3>Hamster Fight Club</h3>
+                            <p>Fight and win</p>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- Wallet Section -->
-            <section id="wallet-section" class="content-section">
+            <!-- Price Chart Section -->
+            <section id="price-section" class="content-section">
                 <div class="section-header">
-                    <h2>Wallet</h2>
-                    <span class="section-subtitle">HMSTR price & your balance</span>
+                    <h2>HMSTR Price</h2>
+                    <span class="section-subtitle">Real-time charts and statistics</span>
                 </div>
                 
-                <!-- Real-time Price Chart -->
+                <!-- Currency Toggle -->
+                <div class="currency-toggle">
+                    <button class="currency-btn active" data-currency="usdt">USDT</button>
+                    <button class="currency-btn" data-currency="rub">RUB</button>
+                </div>
+
+                <!-- Price Chart -->
                 <div class="chart-container">
                     <div class="chart-header">
                         <div class="price-info">
@@ -76,9 +83,11 @@
                             <div class="price-change" id="price-change">+0.00%</div>
                         </div>
                         <div class="timeframes">
-                            <button class="timeframe-btn active" data-timeframe="live">LIVE</button>
-                            <button class="timeframe-btn" data-timeframe="1h">1H</button>
                             <button class="timeframe-btn" data-timeframe="24h">24H</button>
+                            <button class="timeframe-btn" data-timeframe="7d">7D</button>
+                            <button class="timeframe-btn active" data-timeframe="1m">1M</button>
+                            <button class="timeframe-btn" data-timeframe="3m">3M</button>
+                            <button class="timeframe-btn" data-timeframe="max">MAX</button>
                         </div>
                     </div>
                     <div class="chart-wrapper">
@@ -86,70 +95,27 @@
                     </div>
                 </div>
 
-                <!-- Balance Info -->
-                <div class="balance-info">
-                    <div class="balance-main">
-                        <span class="balance-label">Your Balance</span>
-                        <div class="balance-numbers">
-                            <span class="hmstr-amount">6 HMSTR</span>
-                            <span class="usd-amount">≈ $0.06</span>
-                        </div>
-                    </div>
-                    <div class="balance-buttons">
-                        <button class="balance-btn buy-btn">Buy</button>
-                        <button class="balance-btn sell-btn">Sell</button>
-                        <button class="balance-btn transfer-btn">Transfer</button>
-                    </div>
-                </div>
-
-                <!-- Market Stats -->
+                <!-- Market Statistics -->
                 <div class="market-stats">
                     <div class="stat-card">
-                        <span class="stat-value">$102M</span>
+                        <span class="stat-value" id="market-cap">$102M</span>
                         <span class="stat-label">Market Cap</span>
                     </div>
                     <div class="stat-card">
-                        <span class="stat-value">$5.2M</span>
-                        <span class="stat-label">24h Volume</span>
+                        <span class="stat-value" id="total-supply">10B</span>
+                        <span class="stat-label">Total Supply</span>
                     </div>
                     <div class="stat-card">
-                        <span class="stat-value">#245</span>
-                        <span class="stat-label">Rank</span>
+                        <span class="stat-value" id="volume-24h">$5.2M</span>
+                        <span class="stat-label">24h Volume</span>
                     </div>
                 </div>
 
-                <!-- Exchanges -->
-                <div class="section-subheader">
-                    <h3>Buy HMSTR on Exchanges</h3>
-                    <span class="section-subtitle">Best prices & low fees</span>
-                </div>
-                
-                <div class="exchanges-list">
-                    <div class="exchange-card" data-url="https://www.bybit.com">
-                        <div class="exchange-logo">B</div>
-                        <div class="exchange-info">
-                            <h3>Bybit</h3>
-                            <p>$0.0101 • 0.1% fee</p>
-                        </div>
-                        <div class="exchange-arrow">→</div>
-                    </div>
-
-                    <div class="exchange-card" data-url="https://www.mexc.com">
-                        <div class="exchange-logo">M</div>
-                        <div class="exchange-info">
-                            <h3>MEXC</h3>
-                            <p>$0.0102 • 0% fee</p>
-                        </div>
-                        <div class="exchange-arrow">→</div>
-                    </div>
-
-                    <div class="exchange-card" data-url="https://www.binance.com">
-                        <div class="exchange-logo">B</div>
-                        <div class="exchange-info">
-                            <h3>Binance</h3>
-                            <p>$0.0103 • 0.1% fee</p>
-                        </div>
-                        <div class="exchange-arrow">→</div>
+                <!-- Additional Info -->
+                <div class="info-cards">
+                    <div class="info-card">
+                        <h3>About HMSTR</h3>
+                        <p>Hamster Coin is the native token of Hamster ecosystem</p>
                     </div>
                 </div>
             </section>
@@ -158,11 +124,14 @@
             <section id="profile-section" class="content-section">
                 <div class="section-header">
                     <h2>Profile</h2>
-                    <span class="section-subtitle">Your account</span>
+                    <span class="section-subtitle">Your personal account</span>
                 </div>
                 
                 <div class="profile-card">
-                    <div class="profile-avatar" id="profile-avatar">U</div>
+                    <div class="profile-avatar" id="profile-avatar">
+                        <img id="avatar-img" src="" alt="Avatar" style="display: none;">
+                        <span id="avatar-fallback">U</span>
+                    </div>
                     <div class="profile-info">
                         <h3 id="profile-name">User Name</h3>
                         <p id="profile-username">@username</p>
@@ -172,12 +141,17 @@
                 <div class="profile-stats">
                     <div class="stat-item">
                         <span class="stat-number">3</span>
-                        <span class="stat-label">Games</span>
+                        <span class="stat-label">Games Played</span>
                     </div>
                     <div class="stat-item">
                         <span class="stat-number">15</span>
-                        <span class="stat-label">Days</span>
+                        <span class="stat-label">Days Active</span>
                     </div>
+                </div>
+
+                <div class="profile-actions">
+                    <button class="action-btn" id="invite-btn">Invite Friends</button>
+                    <button class="action-btn secondary" id="settings-btn">Settings</button>
                 </div>
             </section>
         </main>
@@ -188,9 +162,9 @@
                 <span class="nav-icon">🎮</span>
                 <span class="nav-label">Games</span>
             </button>
-            <button class="nav-item" data-section="wallet-section">
-                <span class="nav-icon">💰</span>
-                <span class="nav-label">Wallet</span>
+            <button class="nav-item" data-section="price-section">
+                <span class="nav-icon">📊</span>
+                <span class="nav-label">Price</span>
             </button>
             <button class="nav-item" data-section="profile-section">
                 <span class="nav-icon">👤</span>
