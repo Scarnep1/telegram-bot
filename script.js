@@ -1,16 +1,272 @@
-// Initialize the app
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM loaded');
-    initializeApp();
-});
+// Chart initialization
+let priceChart;
+let currentTimeframe = '1h';
 
+function initializePriceChart() {
+    console.log('Initializing price chart');
+    const ctx = document.getElementById('priceChart').getContext('2d');
+    
+    // Generate sample price data
+    const data = generatePriceData(24, 0.01, 0.002); // 24 points, starting at $0.01
+    
+    priceChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: data.labels,
+            datasets: [{
+                label: 'HMSTR Price',
+                data: data.prices,
+                borderColor: '#667eea',
+                backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4,
+                pointRadius: 0,
+                pointHoverRadius: 4,
+                pointBackgroundColor: '#667eea',
+                pointBorderColor: '#ffffff',
+                pointBorderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    titleColor: '#ffffff',
+                    bodyColor: '#ffffff',
+                    borderColor: '#667eea',
+                    borderWidth: 1,
+                    callbacks: {
+                        label: function(context) {
+                            return `Price: $${context.parsed.y.toFixed(4)}`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    display: true,
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        color: '#666',
+                        font: {
+                            size: 10
+                        }
+                    }
+                },
+                y: {
+                    display: true,
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.05)'
+                    },
+                    ticks: {
+                        color: '#666',
+                        font: {
+                            size: 10
+                        },
+                        callback: function(value) {
+                            return '$' + value.toFixed(3);
+                        }
+                    }
+                }
+            },
+            interaction: {
+                mode: 'nearest',
+                axis: 'x',
+                intersect: false
+            }
+        }
+    });
+    
+    setupChartInteractions();
+}
+
+function generatePriceData(points, basePrice, volatility) {
+    const prices = [basePrice];
+    const labels = [];
+    const now = new Date();
+    
+    for (let i = points - 1; i >= 0; i--) {
+        const time = new Date(now.getTime() - i * 3600000); // 1 hour intervals
+        labels.push(time.getHours().toString().padStart(2, '0') + ':00');
+    }
+    
+    for (let i = 1; i < points; i++) {
+        const change = (Math.random() - 0.5) * volatility;
+        const newPrice = Math.max(0.0001, prices[i-1] + change);
+        prices.push(Number(newPrice.toFixed(4)));
+    }
+    
+    return { prices, labels };
+}
+
+function setupChartInteractions() {
+    // Timeframe buttons
+    const timeframeBtns = document.querySelectorAll('.timeframe-btn');
+    timeframeBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const timeframe = this.getAttribute('data-timeframe');
+            switchTimeframe(timeframe);
+            
+            // Update active state
+            timeframeBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+    
+    // Balance action buttons
+    const actionBtns = document.querySelectorAll('.action-btn');
+    actionBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const action = this.textContent.toLowerCase();
+            handleBalanceAction(action);
+        });
+    });
+    
+    // Quick action buttons
+    const quickBtns = document.querySelectorAll('.quick-btn');
+    quickBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const action = this.querySelector('span:last-child').textContent;
+            showNotification(`${action} feature coming soon!`);
+        });
+    });
+}
+
+function switchTimeframe(timeframe) {
+    console.log('Switching timeframe to:', timeframe);
+    currentTimeframe = timeframe;
+    
+    let points, basePrice, volatility;
+    
+    switch(timeframe) {
+        case '1h':
+            points = 24;
+            basePrice = 0.0102;
+            volatility = 0.0002;
+            break;
+        case '24h':
+            points = 24;
+            basePrice = 0.0098;
+            volatility = 0.0005;
+            break;
+        case '7d':
+            points = 7;
+            basePrice = 0.0095;
+            volatility = 0.001;
+            break;
+        case '1m':
+            points = 30;
+            basePrice = 0.008;
+            volatility = 0.002;
+            break;
+    }
+    
+    const newData = generatePriceData(points, basePrice, volatility);
+    
+    // Update chart
+    priceChart.data.labels = newData.labels;
+    priceChart.data.datasets[0].data = newData.prices;
+    priceChart.update();
+    
+    // Update price display
+    const currentPrice = newData.prices[newData.prices.length - 1];
+    const previousPrice = newData.prices[newData.prices.length - 2];
+    const change = ((currentPrice - previousPrice) / previousPrice) * 100;
+    
+    updatePriceDisplay(currentPrice, change);
+}
+
+function updatePriceDisplay(price, change) {
+    const priceElement = document.querySelector('.current-price');
+    const changeElement = document.querySelector('.price-change');
+    
+    if (priceElement) {
+        priceElement.textContent = '$' + price.toFixed(4);
+        priceElement.classList.add('price-update');
+        setTimeout(() => priceElement.classList.remove('price-update'), 300);
+    }
+    
+    if (changeElement) {
+        changeElement.textContent = (change >= 0 ? '+' : '') + change.toFixed(2) + '%';
+        changeElement.className = 'price-change ' + (change >= 0 ? 'positive' : 'negative');
+    }
+    
+    // Update balance equivalent
+    const balanceAmount = document.querySelector('.amount');
+    if (balanceAmount) {
+        const balance = parseInt(balanceAmount.textContent.replace(/,/g, ''));
+        const usdValue = (balance * price).toFixed(2);
+        const usdElement = document.querySelector('.balance-equivalent');
+        if (usdElement) {
+            usdElement.textContent = '≈ $' + usdValue;
+        }
+    }
+}
+
+function handleBalanceAction(action) {
+    switch(action) {
+        case 'buy':
+            showNotification('🚀 Redirecting to exchange...');
+            setTimeout(() => {
+                window.open('https://www.binance.com/trade/HMSTR_USDT', '_blank');
+            }, 1000);
+            break;
+        case 'sell':
+            showNotification('💸 Sell feature coming soon!');
+            break;
+        case 'transfer':
+            showNotification('🔄 Transfer feature coming soon!');
+            break;
+    }
+}
+
+// Real-time price updates
+function startPriceUpdates() {
+    setInterval(() => {
+        if (priceChart && priceChart.data.datasets[0].data.length > 0) {
+            const currentData = priceChart.data.datasets[0].data;
+            const lastPrice = currentData[currentData.length - 1];
+            const change = (Math.random() - 0.5) * 0.0001;
+            const newPrice = Math.max(0.0001, lastPrice + change);
+            
+            // Add new point and remove first point for real-time effect
+            currentData.push(Number(newPrice.toFixed(4)));
+            currentData.shift();
+            
+            // Update labels for real-time
+            const now = new Date();
+            const newLabel = now.getHours().toString().padStart(2, '0') + ':' + 
+                           now.getMinutes().toString().padStart(2, '0');
+            priceChart.data.labels.push(newLabel);
+            priceChart.data.labels.shift();
+            
+            priceChart.update('none');
+            
+            // Update price display occasionally
+            if (Math.random() > 0.7) {
+                const previousPrice = currentData[currentData.length - 2];
+                const priceChange = ((newPrice - previousPrice) / previousPrice) * 100;
+                updatePriceDisplay(newPrice, priceChange);
+            }
+        }
+    }, 5000); // Update every 5 seconds
+}
+
+// Update initializeApp function
 function initializeApp() {
     console.log('Initializing app');
     
-    // Initialize Telegram WebApp data
     initTelegramData();
-    
-    // Setup all functionality
     setupMobileSupport();
     setupNavigation();
     setupGameCards();
@@ -19,61 +275,22 @@ function initializeApp() {
     setupBalanceRefresh();
     setupProfileActions();
     
+    // Initialize chart
+    setTimeout(() => {
+        initializePriceChart();
+        startPriceUpdates();
+    }, 100);
+    
     console.log('App initialized successfully');
 }
 
-// Initialize Telegram user data
-function initTelegramData() {
-    // Check if we're in Telegram WebApp
-    if (window.Telegram && window.Telegram.WebApp) {
-        const webApp = Telegram.WebApp;
-        
-        // Expand the app to full height
-        webApp.expand();
-        
-        // Get user data from Telegram
-        const user = webApp.initDataUnsafe?.user;
-        
-        if (user) {
-            // Update header avatar
-            const userAvatar = document.getElementById('user-avatar');
-            const profileAvatar = document.getElementById('profile-avatar');
-            const profileName = document.getElementById('profile-name');
-            const profileUsername = document.getElementById('profile-username');
-            
-            // Use first letter of first name or username
-            let avatarText = 'U';
-            if (user.first_name) {
-                avatarText = user.first_name.charAt(0).toUpperCase();
-            } else if (user.username) {
-                avatarText = user.username.charAt(0).toUpperCase();
-            }
-            
-            if (userAvatar) userAvatar.textContent = avatarText;
-            if (profileAvatar) profileAvatar.textContent = avatarText;
-            
-            // Update profile information
-            if (profileName) {
-                profileName.textContent = user.first_name || user.username || 'Telegram User';
-            }
-            
-            if (profileUsername) {
-                profileUsername.textContent = user.username ? '@' + user.username : 'Telegram User';
-            }
-            
-            console.log('Telegram user data loaded:', user);
-        }
-    } else {
-        console.log('Running outside Telegram - using demo data');
-        // You can set demo data here if needed
-    }
-}
-
+// Add to existing mobile support
 function setupMobileSupport() {
     console.log('Setting up mobile support');
     
-    // Add touch events for mobile devices
-    const touchElements = document.querySelectorAll('.game-card, .exchange-card, .nav-item, #copy-btn, .action-card, .balance-refresh');
+    const touchElements = document.querySelectorAll(
+        '.game-card, .exchange-card, .nav-item, #copy-btn, .action-card, .balance-refresh, .timeframe-btn, .quick-btn'
+    );
     
     touchElements.forEach(element => {
         element.addEventListener('touchstart', function(e) {
@@ -84,259 +301,7 @@ function setupMobileSupport() {
         element.addEventListener('touchend', function(e) {
             e.preventDefault();
             this.classList.remove('touch-active');
-            // Simulate click after touch end
             setTimeout(() => this.click(), 50);
         });
     });
 }
-
-function setupNavigation() {
-    console.log('Setting up navigation');
-    const navItems = document.querySelectorAll('.nav-item');
-    const sections = document.querySelectorAll('.content-section');
-    
-    console.log('Found ' + navItems.length + ' nav items');
-    
-    navItems.forEach(item => {
-        item.addEventListener('click', function() {
-            console.log('Nav item clicked:', this.getAttribute('data-section'));
-            const targetSection = this.getAttribute('data-section');
-            
-            // Remove active class from all nav items
-            navItems.forEach(nav => {
-                nav.classList.remove('active');
-            });
-            
-            // Add active class to clicked nav item
-            this.classList.add('active');
-            
-            // Hide all sections
-            sections.forEach(section => {
-                section.classList.remove('active');
-            });
-            
-            // Show target section
-            const targetElement = document.getElementById(targetSection);
-            if (targetElement) {
-                targetElement.classList.add('active');
-                console.log('Showing section: ' + targetSection);
-            } else {
-                console.error('Section not found: ' + targetSection);
-            }
-        });
-    });
-}
-
-function setupGameCards() {
-    console.log('Setting up game cards');
-    const gameCards = document.querySelectorAll('.game-card');
-    
-    console.log('Found ' + gameCards.length + ' game cards');
-    
-    gameCards.forEach(card => {
-        card.addEventListener('click', function() {
-            const botUsername = this.getAttribute('data-bot');
-            console.log('Game card clicked:', botUsername);
-            
-            if (botUsername) {
-                if (window.Telegram && window.Telegram.WebApp) {
-                    // Open in Telegram Mini App
-                    Telegram.WebApp.openTelegramLink('https://t.me/' + botUsername);
-                } else {
-                    // Fallback for browser testing
-                    showNotification('Opening: ' + botUsername);
-                    setTimeout(() => {
-                        window.open('https://t.me/' + botUsername, '_blank');
-                    }, 500);
-                }
-            }
-        });
-    });
-}
-
-function setupExchangeCards() {
-    console.log('Setting up exchange cards');
-    const exchangeCards = document.querySelectorAll('.exchange-card');
-    
-    console.log('Found ' + exchangeCards.length + ' exchange cards');
-    
-    exchangeCards.forEach(card => {
-        card.addEventListener('click', function() {
-            const exchangeUrl = this.getAttribute('data-url');
-            console.log('Exchange card clicked:', exchangeUrl);
-            
-            if (exchangeUrl) {
-                if (window.Telegram && window.Telegram.WebApp) {
-                    Telegram.WebApp.openLink(exchangeUrl);
-                } else {
-                    // Fallback for browser testing
-                    showNotification('Opening exchange...');
-                    setTimeout(() => {
-                        window.open(exchangeUrl, '_blank');
-                    }, 500);
-                }
-            }
-        });
-    });
-}
-
-function setupProfileActions() {
-    console.log('Setting up profile actions');
-    const actionCards = document.querySelectorAll('.action-card');
-    
-    actionCards.forEach(card => {
-        card.addEventListener('click', function() {
-            const actionText = this.querySelector('h3').textContent;
-            console.log('Profile action clicked:', actionText);
-            
-            showNotification(actionText + ' - Coming soon!');
-        });
-    });
-}
-
-function setupReferralLink() {
-    console.log('Setting up referral link');
-    const copyBtn = document.getElementById('copy-btn');
-    const referralInput = document.getElementById('referral-input');
-    
-    if (!copyBtn || !referralInput) {
-        console.error('Referral elements not found!');
-        return;
-    }
-    
-    console.log('Referral elements found');
-    
-    copyBtn.addEventListener('click', function() {
-        console.log('Copy button clicked');
-        
-        // Select the text field
-        referralInput.select();
-        referralInput.setSelectionRange(0, 99999);
-        
-        // Copy the text
-        navigator.clipboard.writeText(referralInput.value).then(function() {
-            console.log('Text copied successfully');
-            showNotification('🎉 Link copied to clipboard!');
-        }).catch(function(err) {
-            console.error('Failed to copy text: ', err);
-            // Fallback for older browsers
-            try {
-                document.execCommand('copy');
-                console.log('Text copied using fallback method');
-                showNotification('📋 Link copied to clipboard!');
-            } catch (e) {
-                console.error('Fallback copy failed: ', e);
-                showNotification('❌ Failed to copy link');
-            }
-        });
-    });
-}
-
-function setupBalanceRefresh() {
-    console.log('Setting up balance refresh');
-    const refreshBtn = document.querySelector('.balance-refresh');
-    
-    if (!refreshBtn) {
-        console.error('Refresh button not found!');
-        return;
-    }
-    
-    console.log('Refresh button found');
-    
-    refreshBtn.addEventListener('click', function() {
-        console.log('Refresh button clicked');
-        const balanceAmount = document.querySelector('.amount');
-        
-        if (!balanceAmount) {
-            console.error('Balance amount element not found!');
-            return;
-        }
-        
-        // Add rotation animation
-        this.style.transition = 'transform 0.3s ease';
-        this.style.transform = 'rotate(360deg)';
-        
-        // Simulate API call to refresh balance
-        simulateBalanceUpdate(balanceAmount, this);
-    });
-}
-
-function simulateBalanceUpdate(balanceAmount, refreshBtn) {
-    // Simulate network delay
-    setTimeout(() => {
-        // Reset rotation
-        refreshBtn.style.transform = 'rotate(0deg)';
-        
-        // Simulate balance change
-        const currentBalance = parseInt(balanceAmount.textContent.replace(/,/g, ''));
-        const randomChange = Math.floor(Math.random() * 20) + 1; // +1 to +20
-        const newBalance = currentBalance + randomChange;
-        
-        balanceAmount.textContent = newBalance.toLocaleString();
-        
-        // Update equivalent USD value
-        const usdValue = (newBalance * 0.01).toFixed(2);
-        const usdElement = document.querySelector('.balance-equivalent');
-        if (usdElement) {
-            usdElement.textContent = '≈ $' + usdValue;
-        }
-        
-        console.log('Balance updated to: ' + newBalance);
-        showNotification('💫 Balance updated! +' + randomChange + ' HMSTR');
-    }, 1000);
-}
-
-function showNotification(message) {
-    console.log('Showing notification:', message);
-    const notification = document.getElementById('notification');
-    
-    if (!notification) {
-        console.error('Notification element not found!');
-        return;
-    }
-    
-    notification.textContent = message;
-    notification.classList.add('show');
-    
-    setTimeout(function() {
-        notification.classList.remove('show');
-    }, 3000);
-}
-
-// Simulate user activity for demo
-function simulateUserActivity() {
-    setInterval(() => {
-        const balanceElement = document.querySelector('.amount');
-        if (balanceElement && Math.random() > 0.7) { // 30% chance
-            const currentBalance = parseInt(balanceElement.textContent.replace(/,/g, ''));
-            const randomIncrease = Math.floor(Math.random() * 3) + 1; // 1 to 3
-            const newBalance = currentBalance + randomIncrease;
-            balanceElement.textContent = newBalance.toLocaleString();
-            
-            const usdValue = (newBalance * 0.01).toFixed(2);
-            const usdElement = document.querySelector('.balance-equivalent');
-            if (usdElement) {
-                usdElement.textContent = '≈ $' + usdValue;
-            }
-        }
-    }, 30000); // Every 30 seconds
-}
-
-// Start simulation after a delay
-setTimeout(simulateUserActivity, 10000);
-
-// Error handling for missing elements
-setTimeout(function() {
-    const requiredElements = [
-        'games-section', 'wallet-section', 'profile-section',
-        'referral-input', 'copy-btn', 'notification',
-        'user-avatar', 'profile-avatar', 'profile-name', 'profile-username'
-    ];
-    
-    requiredElements.forEach(id => {
-        const element = document.getElementById(id);
-        if (!element) {
-            console.error('Element with id "' + id + '" not found!');
-        }
-    });
-}, 100);
