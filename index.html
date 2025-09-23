@@ -2,179 +2,124 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hamster Verse</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
     <div class="app-container">
-        <!-- Header -->
-        <header class="header">
-            <div class="header-content">
-                <h1 class="app-title">Hamster Verse</h1>
-                <div class="user-avatar" id="user-avatar">H</div>
-            </div>
-        </header>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Games Section -->
-            <section id="games-section" class="content-section active">
-                <div class="section-header">
-                    <h2>Games</h2>
-                    <span class="section-subtitle">Play and earn HMSTR</span>
-                </div>
-                
-                <div class="games-grid">
-                    <div class="game-card" data-url="https://t.me/Hamster_GAme_Dev_bot/start?startapp=kentId6823288584">
-                        <div class="game-image">
-                            <div class="game-icon">🐹</div>
-                        </div>
-                        <div class="game-info">
-                            <h3>Hamster Kombat</h3>
-                            <p>Tap to earn coins</p>
-                        </div>
-                        <div class="game-badge">Hot</div>
-                    </div>
-
-                    <div class="game-card" data-url="https://t.me/hamsterking_game_bot?startapp=6823288584">
-                        <div class="game-image">
-                            <div class="game-icon">👑</div>
-                        </div>
-                        <div class="game-info">
-                            <h3>Hamster King</h3>
-                            <p>Build your kingdom</p>
-                        </div>
-                    </div>
-
-                    <div class="game-card" data-url="https://t.me/hamster_fightclub_bot?startapp=NWE1YjA2YWUtZTAyMS01ZjA1LTg4ZTYtMGZmZjUwNDQwNjU5">
-                        <div class="game-image">
-                            <div class="game-icon">🥊</div>
-                        </div>
-                        <div class="game-info">
-                            <h3>Hamster Fight Club</h3>
-                            <p>Fight and win</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Price Chart Section -->
-            <section id="price-section" class="content-section">
-                <div class="section-header">
-                    <h2>HMSTR Price</h2>
-                    <span class="section-subtitle">Real-time charts and statistics</span>
-                </div>
-                
-                <!-- Currency Toggle -->
-                <div class="currency-toggle">
-                    <button class="currency-btn active" data-currency="usdt">USDT</button>
-                    <button class="currency-btn" data-currency="rub">RUB</button>
-                </div>
-
-                <!-- Price Chart -->
-                <div class="chart-container">
-                    <div class="chart-header">
-                        <div class="price-info">
-                            <div class="current-price" id="current-price">$0.0102</div>
-                            <div class="price-change" id="price-change">+0.00%</div>
-                        </div>
-                        <div class="timeframes">
-                            <button class="timeframe-btn" data-timeframe="24h">24H</button>
-                            <button class="timeframe-btn" data-timeframe="7d">7D</button>
-                            <button class="timeframe-btn active" data-timeframe="1m">1M</button>
-                            <button class="timeframe-btn" data-timeframe="3m">3M</button>
-                            <button class="timeframe-btn" data-timeframe="max">MAX</button>
-                        </div>
-                    </div>
-                    <div class="chart-wrapper">
-                        <canvas id="priceChart"></canvas>
-                    </div>
-                </div>
-
-                <!-- Market Statistics -->
-                <div class="market-stats">
-                    <div class="stat-card">
-                        <span class="stat-value" id="market-cap">$102M</span>
-                        <span class="stat-label">Market Cap</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-value" id="total-supply">10B</span>
-                        <span class="stat-label">Total Supply</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-value" id="volume-24h">$5.2M</span>
-                        <span class="stat-label">24h Volume</span>
-                    </div>
-                </div>
-
-                <!-- Additional Info -->
-                <div class="info-cards">
-                    <div class="info-card">
-                        <h3>About HMSTR</h3>
-                        <p>Hamster Coin is the native token of Hamster ecosystem</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Profile Section -->
-            <section id="profile-section" class="content-section">
-                <div class="section-header">
-                    <h2>Profile</h2>
-                    <span class="section-subtitle">Your personal account</span>
-                </div>
-                
-                <div class="profile-card">
-                    <div class="profile-avatar" id="profile-avatar">
-                        <img id="avatar-img" src="" alt="Avatar" style="display: none;">
-                        <span id="avatar-fallback">U</span>
-                    </div>
-                    <div class="profile-info">
-                        <h3 id="profile-name">User Name</h3>
-                        <p id="profile-username">@username</p>
-                    </div>
-                </div>
-
-                <div class="profile-stats">
-                    <div class="stat-item">
-                        <span class="stat-number">3</span>
-                        <span class="stat-label">Games Played</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number">15</span>
-                        <span class="stat-label">Days Active</span>
-                    </div>
-                </div>
-
-                <div class="profile-actions">
-                    <button class="action-btn" id="invite-btn">Invite Friends</button>
-                    <button class="action-btn secondary" id="settings-btn">Settings</button>
-                </div>
-            </section>
-        </main>
-
-        <!-- Bottom Navigation -->
-        <nav class="bottom-nav">
-            <button class="nav-item active" data-section="games-section">
-                <span class="nav-icon">🎮</span>
-                <span class="nav-label">Games</span>
-            </button>
-            <button class="nav-item" data-section="price-section">
-                <span class="nav-icon">📊</span>
-                <span class="nav-label">Price</span>
-            </button>
-            <button class="nav-item" data-section="profile-section">
-                <span class="nav-icon">👤</span>
-                <span class="nav-label">Profile</span>
-            </button>
+        <!-- Навигация -->
+        <nav class="navbar">
+            <div class="nav-item active" data-tab="games">Games</div>
+            <div class="nav-item" data-tab="price">Price</div>
+            <div class="nav-item" data-tab="profile">Profile</div>
         </nav>
 
-        <!-- Notification -->
-        <div id="notification" class="notification"></div>
+        <!-- Контент -->
+        <div class="content">
+            <!-- Вкладка Games -->
+            <div id="games" class="tab-content active">
+                <header class="page-header">
+                    <h1>Hamster Verse</h1>
+                    <p class="subtitle">Games</p>
+                </header>
+                
+                <div class="games-grid">
+                    <div class="game-card" onclick="openGame('https://t.me/Hamster_GAme_Dev_bot/start?startapp=kentId6823288584')">
+                        <div class="game-icon">🐹</div>
+                        <h3>Hamster Kombat</h3>
+                        <p>Tap to earn coins</p>
+                        <span class="hot-badge">Hot</span>
+                    </div>
+                    
+                    <div class="game-card" onclick="openGame('https://t.me/hamsterking_game_bot?startapp=6823288584')">
+                        <div class="game-icon">👑</div>
+                        <h3>Hamster King</h3>
+                        <p>Build your kingdom</p>
+                    </div>
+                    
+                    <div class="game-card" onclick="openGame('https://t.me/hamster_fightclub_bot?startapp=NWE1YjA2YWUtZTAyMS01ZjA1LTg4ZTYtMGZmZjUwNDQwNjU5')">
+                        <div class="game-icon">🥊</div>
+                        <h3>Hamster Fight Club</h3>
+                        <p>Fight and win</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Вкладка Price -->
+            <div id="price" class="tab-content">
+                <header class="page-header">
+                    <h1>HMSTR Price</h1>
+                    <p class="subtitle">Real-time tracking</p>
+                </header>
+                
+                <div class="price-container">
+                    <div class="timeframe-selector">
+                        <button class="time-btn active" data-time="24h">24H</button>
+                        <button class="time-btn" data-time="7d">7D</button>
+                        <button class="time-btn" data-time="1m">1M</button>
+                        <button class="time-btn" data-time="3m">3M</button>
+                        <button class="time-btn" data-time="max">MAX</button>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <canvas id="priceChart"></canvas>
+                    </div>
+                    
+                    <div class="price-info">
+                        <div class="current-price">
+                            <span class="price-usdt" id="currentPriceUSDT">$0.00</span>
+                            <span class="price-rub" id="currentPriceRUB">0.00 ₽</span>
+                            <span class="price-change" id="priceChange">+0.00%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="market-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Market Cap</span>
+                            <span class="stat-value" id="marketCap">$0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Total Supply</span>
+                            <span class="stat-value" id="totalSupply">0 HMSTR</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">24h Volume</span>
+                            <span class="stat-value" id="volume24h">$0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Вкладка Profile -->
+            <div id="profile" class="tab-content">
+                <header class="page-header">
+                    <h1>Profile</h1>
+                    <p class="subtitle">Your account</p>
+                </header>
+                
+                <div class="profile-container">
+                    <div class="avatar-section">
+                        <img id="userAvatar" src="" alt="Avatar" class="avatar">
+                        <h2 id="userName">User Name</h2>
+                    </div>
+                    
+                    <div class="profile-stats">
+                        <div class="profile-stat">
+                            <span class="stat-label">Games Played</span>
+                            <span class="stat-value">3</span>
+                        </div>
+                        <div class="profile-stat">
+                            <span class="stat-label">Total Earnings</span>
+                            <span class="stat-value">0 HMSTR</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
