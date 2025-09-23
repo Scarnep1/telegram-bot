@@ -6,17 +6,12 @@
     <title>Hamster Menu</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Chart.js для графика -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Moment.js для времени -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
 </head>
 <body>
     <div class="app-container">
         <!-- Header -->
-        <header class="header" role="banner">
+        <header class="header">
             <div class="header-content">
                 <h1 class="app-title">Hamster Menu</h1>
                 <div class="user-avatar" id="user-avatar">H</div>
@@ -24,10 +19,46 @@
         </header>
 
         <!-- Main Content -->
-        <main class="main-content" role="main">
+        <main class="main-content">
             <!-- Games Section -->
-            <section id="games-section" class="content-section active" aria-labelledby="games-heading">
-                <!-- ... существующий код Games ... -->
+            <section id="games-section" class="content-section active">
+                <div class="section-header">
+                    <h2>Games</h2>
+                    <span class="section-subtitle">Play and earn</span>
+                </div>
+                
+                <div class="games-grid">
+                    <div class="game-card" data-bot="hamsterkombat_bot">
+                        <div class="game-image">
+                            <div class="game-icon">🐹</div>
+                        </div>
+                        <div class="game-info">
+                            <h3>Hamster Kombat</h3>
+                            <p>Tap to earn coins</p>
+                        </div>
+                        <div class="game-badge">Hot</div>
+                    </div>
+
+                    <div class="game-card" data-bot="notcoin_bot">
+                        <div class="game-image">
+                            <div class="game-icon">🪙</div>
+                        </div>
+                        <div class="game-info">
+                            <h3>Notcoin</h3>
+                            <p>Tap to earn</p>
+                        </div>
+                    </div>
+
+                    <div class="game-card" data-bot="catizen_bot">
+                        <div class="game-image">
+                            <div class="game-icon">😺</div>
+                        </div>
+                        <div class="game-info">
+                            <h3>Catizen</h3>
+                            <p>Raise cats</p>
+                        </div>
+                    </div>
+                </div>
             </section>
 
             <!-- Wallet Section -->
@@ -42,13 +73,12 @@
                     <div class="chart-header">
                         <div class="price-info">
                             <div class="current-price" id="current-price">$0.0102</div>
-                            <div class="price-change positive" id="price-change">+2.4%</div>
+                            <div class="price-change" id="price-change">+0.00%</div>
                         </div>
                         <div class="timeframes">
-                            <button class="timeframe-btn active" data-timeframe="5m">5M</button>
-                            <button class="timeframe-btn" data-timeframe="15m">15M</button>
+                            <button class="timeframe-btn active" data-timeframe="live">LIVE</button>
                             <button class="timeframe-btn" data-timeframe="1h">1H</button>
-                            <button class="timeframe-btn" data-timeframe="4h">4H</button>
+                            <button class="timeframe-btn" data-timeframe="24h">24H</button>
                         </div>
                     </div>
                     <div class="chart-wrapper">
@@ -58,79 +88,66 @@
 
                 <!-- Balance Info -->
                 <div class="balance-info">
-                    <div class="balance-item">
+                    <div class="balance-main">
                         <span class="balance-label">Your Balance</span>
-                        <div class="balance-amount">
-                            <span class="amount">6</span>
-                            <span class="currency">HMSTR</span>
+                        <div class="balance-numbers">
+                            <span class="hmstr-amount">6 HMSTR</span>
+                            <span class="usd-amount">≈ $0.06</span>
                         </div>
-                        <div class="balance-equivalent">≈ $0.06</div>
                     </div>
-                    <div class="balance-actions">
-                        <button class="action-btn buy-btn">Buy</button>
-                        <button class="action-btn sell-btn">Sell</button>
-                        <button class="action-btn transfer-btn">Transfer</button>
+                    <div class="balance-buttons">
+                        <button class="balance-btn buy-btn">Buy</button>
+                        <button class="balance-btn sell-btn">Sell</button>
+                        <button class="balance-btn transfer-btn">Transfer</button>
                     </div>
                 </div>
 
                 <!-- Market Stats -->
                 <div class="market-stats">
-                    <div class="stat-item">
-                        <span class="stat-label">Market Cap</span>
+                    <div class="stat-card">
                         <span class="stat-value">$102M</span>
+                        <span class="stat-label">Market Cap</span>
                     </div>
-                    <div class="stat-item">
-                        <span class="stat-label">24h Volume</span>
+                    <div class="stat-card">
                         <span class="stat-value">$5.2M</span>
+                        <span class="stat-label">24h Volume</span>
                     </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Rank</span>
+                    <div class="stat-card">
                         <span class="stat-value">#245</span>
+                        <span class="stat-label">Rank</span>
                     </div>
                 </div>
 
-                <!-- Exchanges Section -->
+                <!-- Exchanges -->
                 <div class="section-subheader">
                     <h3>Buy HMSTR on Exchanges</h3>
                     <span class="section-subtitle">Best prices & low fees</span>
                 </div>
                 
                 <div class="exchanges-list">
-                    <div class="exchange-card" data-url="https://www.bybit.com/trade-spot/HMSTR/USDT">
-                        <div class="exchange-logo" style="background: linear-gradient(135deg, #00c0f3, #0066ff);">B</div>
+                    <div class="exchange-card" data-url="https://www.bybit.com">
+                        <div class="exchange-logo">B</div>
                         <div class="exchange-info">
                             <h3>Bybit</h3>
                             <p>$0.0101 • 0.1% fee</p>
                         </div>
-                        <div class="exchange-price">
-                            <span class="price">$0.0101</span>
-                            <span class="volume">High volume</span>
-                        </div>
                         <div class="exchange-arrow">→</div>
                     </div>
 
-                    <div class="exchange-card" data-url="https://www.mexc.com/exchange/HMSTR_USDT">
-                        <div class="exchange-logo" style="background: linear-gradient(135deg, #00c851, #007e33);">M</div>
+                    <div class="exchange-card" data-url="https://www.mexc.com">
+                        <div class="exchange-logo">M</div>
                         <div class="exchange-info">
                             <h3>MEXC</h3>
-                            <p>$0.0102 • 0% maker fee</p>
-                        </div>
-                        <div class="exchange-price">
-                            <span class="price">$0.0102</span>
-                            <span class="volume">Zero fees</span>
+                            <p>$0.0102 • 0% fee</p>
                         </div>
                         <div class="exchange-arrow">→</div>
                     </div>
 
-                    <div class="exchange-card" data-url="https://www.binance.com/trade/HMSTR_USDT">
-                        <div class="exchange-logo" style="background: linear-gradient(135deg, #f0b90b, #f8d12f);">B</div>
+                    <div class="exchange-card" data-url="https://www.binance.com">
+                        <div class="exchange-logo">B</div>
                         <div class="exchange-info">
                             <h3>Binance</h3>
                             <p>$0.0103 • 0.1% fee</p>
-                        </div>
-                        <div class="exchange-price">
-                            <span class="price">$0.0103</span>
-                            <span class="volume">Best liquidity</span>
                         </div>
                         <div class="exchange-arrow">→</div>
                     </div>
@@ -139,37 +156,51 @@
 
             <!-- Profile Section -->
             <section id="profile-section" class="content-section">
-                <!-- ... существующий код Profile ... -->
+                <div class="section-header">
+                    <h2>Profile</h2>
+                    <span class="section-subtitle">Your account</span>
+                </div>
+                
+                <div class="profile-card">
+                    <div class="profile-avatar" id="profile-avatar">U</div>
+                    <div class="profile-info">
+                        <h3 id="profile-name">User Name</h3>
+                        <p id="profile-username">@username</p>
+                    </div>
+                </div>
+
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">3</span>
+                        <span class="stat-label">Games</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">15</span>
+                        <span class="stat-label">Days</span>
+                    </div>
+                </div>
             </section>
         </main>
 
         <!-- Bottom Navigation -->
-        <nav class="bottom-nav" role="navigation" aria-label="Main navigation">
-            <button class="nav-item active" data-section="games-section" type="button">
+        <nav class="bottom-nav">
+            <button class="nav-item active" data-section="games-section">
                 <span class="nav-icon">🎮</span>
                 <span class="nav-label">Games</span>
             </button>
-            <button class="nav-item" data-section="wallet-section" type="button">
+            <button class="nav-item" data-section="wallet-section">
                 <span class="nav-icon">💰</span>
                 <span class="nav-label">Wallet</span>
             </button>
-            <button class="nav-item" data-section="profile-section" type="button">
+            <button class="nav-item" data-section="profile-section">
                 <span class="nav-icon">👤</span>
                 <span class="nav-label">Profile</span>
             </button>
         </nav>
 
         <!-- Notification -->
-        <div id="notification" class="notification" role="alert" aria-live="polite"></div>
+        <div id="notification" class="notification"></div>
     </div>
-    <script src="script.js?v=4"></script>
-    
-    <noscript>
-        <style>
-            .content-section { display: block !important; }
-            .bottom-nav { display: none !important; }
-        </style>
-        <p>Please enable JavaScript to use this application.</p>
-    </noscript>
+    <script src="script.js"></script>
 </body>
 </html>
