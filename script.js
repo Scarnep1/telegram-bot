@@ -7,22 +7,87 @@ document.addEventListener('DOMContentLoaded', function() {
 function initializeApp() {
     console.log('Initializing app');
     
-    // Navigation functionality
+    // Initialize Telegram WebApp data
+    initTelegramData();
+    
+    // Setup all functionality
+    setupMobileSupport();
     setupNavigation();
-    
-    // Game card clicks
     setupGameCards();
-    
-    // Exchange card clicks
     setupExchangeCards();
-    
-    // Copy referral link functionality
     setupReferralLink();
-    
-    // Balance refresh
     setupBalanceRefresh();
+    setupProfileActions();
     
     console.log('App initialized successfully');
+}
+
+// Initialize Telegram user data
+function initTelegramData() {
+    // Check if we're in Telegram WebApp
+    if (window.Telegram && window.Telegram.WebApp) {
+        const webApp = Telegram.WebApp;
+        
+        // Expand the app to full height
+        webApp.expand();
+        
+        // Get user data from Telegram
+        const user = webApp.initDataUnsafe?.user;
+        
+        if (user) {
+            // Update header avatar
+            const userAvatar = document.getElementById('user-avatar');
+            const profileAvatar = document.getElementById('profile-avatar');
+            const profileName = document.getElementById('profile-name');
+            const profileUsername = document.getElementById('profile-username');
+            
+            // Use first letter of first name or username
+            let avatarText = 'U';
+            if (user.first_name) {
+                avatarText = user.first_name.charAt(0).toUpperCase();
+            } else if (user.username) {
+                avatarText = user.username.charAt(0).toUpperCase();
+            }
+            
+            if (userAvatar) userAvatar.textContent = avatarText;
+            if (profileAvatar) profileAvatar.textContent = avatarText;
+            
+            // Update profile information
+            if (profileName) {
+                profileName.textContent = user.first_name || user.username || 'Telegram User';
+            }
+            
+            if (profileUsername) {
+                profileUsername.textContent = user.username ? '@' + user.username : 'Telegram User';
+            }
+            
+            console.log('Telegram user data loaded:', user);
+        }
+    } else {
+        console.log('Running outside Telegram - using demo data');
+        // You can set demo data here if needed
+    }
+}
+
+function setupMobileSupport() {
+    console.log('Setting up mobile support');
+    
+    // Add touch events for mobile devices
+    const touchElements = document.querySelectorAll('.game-card, .exchange-card, .nav-item, #copy-btn, .action-card, .balance-refresh');
+    
+    touchElements.forEach(element => {
+        element.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            this.classList.add('touch-active');
+        });
+        
+        element.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            this.classList.remove('touch-active');
+            // Simulate click after touch end
+            setTimeout(() => this.click(), 50);
+        });
+    });
 }
 
 function setupNavigation() {
@@ -74,13 +139,16 @@ function setupGameCards() {
             console.log('Game card clicked:', botUsername);
             
             if (botUsername) {
-                // Simulate opening Telegram bot
-                alert('Opening bot: ' + botUsername + '\n\nIn real Telegram Mini App, this would open the bot directly.');
-                
-                // For actual Telegram Mini App, use:
-                // if (window.Telegram && window.Telegram.WebApp) {
-                //     window.Telegram.WebApp.openTelegramLink('https://t.me/' + botUsername);
-                // }
+                if (window.Telegram && window.Telegram.WebApp) {
+                    // Open in Telegram Mini App
+                    Telegram.WebApp.openTelegramLink('https://t.me/' + botUsername);
+                } else {
+                    // Fallback for browser testing
+                    showNotification('Opening: ' + botUsername);
+                    setTimeout(() => {
+                        window.open('https://t.me/' + botUsername, '_blank');
+                    }, 500);
+                }
             }
         });
     });
@@ -98,14 +166,30 @@ function setupExchangeCards() {
             console.log('Exchange card clicked:', exchangeUrl);
             
             if (exchangeUrl) {
-                // Open exchange URL in new tab
-                window.open(exchangeUrl, '_blank');
-                
-                // For Telegram Mini App, use:
-                // if (window.Telegram && window.Telegram.WebApp) {
-                //     window.Telegram.WebApp.openLink(exchangeUrl);
-                // }
+                if (window.Telegram && window.Telegram.WebApp) {
+                    Telegram.WebApp.openLink(exchangeUrl);
+                } else {
+                    // Fallback for browser testing
+                    showNotification('Opening exchange...');
+                    setTimeout(() => {
+                        window.open(exchangeUrl, '_blank');
+                    }, 500);
+                }
             }
+        });
+    });
+}
+
+function setupProfileActions() {
+    console.log('Setting up profile actions');
+    const actionCards = document.querySelectorAll('.action-card');
+    
+    actionCards.forEach(card => {
+        card.addEventListener('click', function() {
+            const actionText = this.querySelector('h3').textContent;
+            console.log('Profile action clicked:', actionText);
+            
+            showNotification(actionText + ' - Coming soon!');
         });
     });
 }
@@ -114,13 +198,9 @@ function setupReferralLink() {
     console.log('Setting up referral link');
     const copyBtn = document.getElementById('copy-btn');
     const referralInput = document.getElementById('referral-input');
-    if (!copyBtn) {
-        console.error('Copy button not found!');
-        return;
-    }
     
-    if (!referralInput) {
-        console.error('Referral input not found!');
+    if (!copyBtn || !referralInput) {
+        console.error('Referral elements not found!');
         return;
     }
     
@@ -136,17 +216,17 @@ function setupReferralLink() {
         // Copy the text
         navigator.clipboard.writeText(referralInput.value).then(function() {
             console.log('Text copied successfully');
-            showNotification('Link copied to clipboard!');
+            showNotification('🎉 Link copied to clipboard!');
         }).catch(function(err) {
             console.error('Failed to copy text: ', err);
             // Fallback for older browsers
             try {
                 document.execCommand('copy');
                 console.log('Text copied using fallback method');
-                showNotification('Link copied to clipboard!');
+                showNotification('📋 Link copied to clipboard!');
             } catch (e) {
                 console.error('Fallback copy failed: ', e);
-                showNotification('Failed to copy link');
+                showNotification('❌ Failed to copy link');
             }
         });
     });
@@ -176,28 +256,34 @@ function setupBalanceRefresh() {
         this.style.transition = 'transform 0.3s ease';
         this.style.transform = 'rotate(360deg)';
         
-        // Simulate balance update
-        setTimeout(() => {
-            // Reset rotation
-            this.style.transform = 'rotate(0deg)';
-            
-            // Simulate small balance change for demo
-            const currentBalance = parseInt(balanceAmount.textContent.replace(',', ''));
-            const randomChange = Math.floor(Math.random() * 10) - 2; // -2 to +7
-            const newBalance = Math.max(0, currentBalance + randomChange);
-            
-            balanceAmount.textContent = newBalance.toLocaleString();
-            
-            // Update equivalent USD value
-            const usdValue = (newBalance * 0.01).toFixed(2);
-            const usdElement = document.querySelector('.balance-equivalent');
-            if (usdElement) {
-                usdElement.textContent = '≈ $' + usdValue;
-            }
-            
-            console.log('Balance updated to: ' + newBalance);
-        }, 1000);
+        // Simulate API call to refresh balance
+        simulateBalanceUpdate(balanceAmount, this);
     });
+}
+
+function simulateBalanceUpdate(balanceAmount, refreshBtn) {
+    // Simulate network delay
+    setTimeout(() => {
+        // Reset rotation
+        refreshBtn.style.transform = 'rotate(0deg)';
+        
+        // Simulate balance change
+        const currentBalance = parseInt(balanceAmount.textContent.replace(/,/g, ''));
+        const randomChange = Math.floor(Math.random() * 20) + 1; // +1 to +20
+        const newBalance = currentBalance + randomChange;
+        
+        balanceAmount.textContent = newBalance.toLocaleString();
+        
+        // Update equivalent USD value
+        const usdValue = (newBalance * 0.01).toFixed(2);
+        const usdElement = document.querySelector('.balance-equivalent');
+        if (usdElement) {
+            usdElement.textContent = '≈ $' + usdValue;
+        }
+        
+        console.log('Balance updated to: ' + newBalance);
+        showNotification('💫 Balance updated! +' + randomChange + ' HMSTR');
+    }, 1000);
 }
 
 function showNotification(message) {
@@ -214,36 +300,16 @@ function showNotification(message) {
     
     setTimeout(function() {
         notification.classList.remove('show');
-    }, 2000);
+    }, 3000);
 }
-
-// Add error handling for missing elements
-function checkElements() {
-    const requiredElements = [
-        'games-section', 'wallet-section', 'profile-section',
-        'referral-input', 'copy-btn', 'notification'
-    ];
-    
-    requiredElements.forEach(id => {
-        const element = document.getElementById(id);
-        if (!element) {
-            console.error('Element with id "' + id + '" not found!');
-        } else {
-            console.log('Element "' + id + '" found');
-        }
-    });
-}
-
-// Check elements on load
-setTimeout(checkElements, 100);
 
 // Simulate user activity for demo
 function simulateUserActivity() {
     setInterval(() => {
         const balanceElement = document.querySelector('.amount');
-        if (balanceElement) {
-            const currentBalance = parseInt(balanceElement.textContent.replace(',', ''));
-            const randomIncrease = Math.floor(Math.random() * 2); // 0 or 1
+        if (balanceElement && Math.random() > 0.7) { // 30% chance
+            const currentBalance = parseInt(balanceElement.textContent.replace(/,/g, ''));
+            const randomIncrease = Math.floor(Math.random() * 3) + 1; // 1 to 3
             const newBalance = currentBalance + randomIncrease;
             balanceElement.textContent = newBalance.toLocaleString();
             
@@ -253,8 +319,24 @@ function simulateUserActivity() {
                 usdElement.textContent = '≈ $' + usdValue;
             }
         }
-    }, 30000);
+    }, 30000); // Every 30 seconds
 }
 
 // Start simulation after a delay
-setTimeout(simulateUserActivity, 5000);
+setTimeout(simulateUserActivity, 10000);
+
+// Error handling for missing elements
+setTimeout(function() {
+    const requiredElements = [
+        'games-section', 'wallet-section', 'profile-section',
+        'referral-input', 'copy-btn', 'notification',
+        'user-avatar', 'profile-avatar', 'profile-name', 'profile-username'
+    ];
+    
+    requiredElements.forEach(id => {
+        const element = document.getElementById(id);
+        if (!element) {
+            console.error('Element with id "' + id + '" not found!');
+        }
+    });
+}, 100);
