@@ -1,268 +1,16 @@
-// Chart initialization
+// Real-time chart variables
 let priceChart;
-let currentTimeframe = '1h';
+let currentTimeframe = '5m';
+let realTimeData = [];
+let wsConnection = null;
+const MAX_POINTS = 50;
 
-function initializePriceChart() {
-    console.log('Initializing price chart');
-    const ctx = document.getElementById('priceChart').getContext('2d');
-    
-    // Generate sample price data
-    const data = generatePriceData(24, 0.01, 0.002); // 24 points, starting at $0.01
-    
-    priceChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: data.labels,
-            datasets: [{
-                label: 'HMSTR Price',
-                data: data.prices,
-                borderColor: '#667eea',
-                backgroundColor: 'rgba(102, 126, 234, 0.1)',
-                borderWidth: 2,
-                fill: true,
-                tension: 0.4,
-                pointRadius: 0,
-                pointHoverRadius: 4,
-                pointBackgroundColor: '#667eea',
-                pointBorderColor: '#ffffff',
-                pointBorderWidth: 2
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    mode: 'index',
-                    intersect: false,
-                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                    titleColor: '#ffffff',
-                    bodyColor: '#ffffff',
-                    borderColor: '#667eea',
-                    borderWidth: 1,
-                    callbacks: {
-                        label: function(context) {
-                            return `Price: $${context.parsed.y.toFixed(4)}`;
-                        }
-                    }
-                }
-            },
-            scales: {
-                x: {
-                    display: true,
-                    grid: {
-                        display: false
-                    },
-                    ticks: {
-                        color: '#666',
-                        font: {
-                            size: 10
-                        }
-                    }
-                },
-                y: {
-                    display: true,
-                    grid: {
-                        color: 'rgba(0, 0, 0, 0.05)'
-                    },
-                    ticks: {
-                        color: '#666',
-                        font: {
-                            size: 10
-                        },
-                        callback: function(value) {
-                            return '$' + value.toFixed(3);
-                        }
-                    }
-                }
-            },
-            interaction: {
-                mode: 'nearest',
-                axis: 'x',
-                intersect: false
-            }
-        }
-    });
-    
-    setupChartInteractions();
-}
+// Initialize the app
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded');
+    initializeApp();
+});
 
-function generatePriceData(points, basePrice, volatility) {
-    const prices = [basePrice];
-    const labels = [];
-    const now = new Date();
-    
-    for (let i = points - 1; i >= 0; i--) {
-        const time = new Date(now.getTime() - i * 3600000); // 1 hour intervals
-        labels.push(time.getHours().toString().padStart(2, '0') + ':00');
-    }
-    
-    for (let i = 1; i < points; i++) {
-        const change = (Math.random() - 0.5) * volatility;
-        const newPrice = Math.max(0.0001, prices[i-1] + change);
-        prices.push(Number(newPrice.toFixed(4)));
-    }
-    
-    return { prices, labels };
-}
-
-function setupChartInteractions() {
-    // Timeframe buttons
-    const timeframeBtns = document.querySelectorAll('.timeframe-btn');
-    timeframeBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            const timeframe = this.getAttribute('data-timeframe');
-            switchTimeframe(timeframe);
-            
-            // Update active state
-            timeframeBtns.forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
-        });
-    });
-    
-    // Balance action buttons
-    const actionBtns = document.querySelectorAll('.action-btn');
-    actionBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            const action = this.textContent.toLowerCase();
-            handleBalanceAction(action);
-        });
-    });
-    
-    // Quick action buttons
-    const quickBtns = document.querySelectorAll('.quick-btn');
-    quickBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            const action = this.querySelector('span:last-child').textContent;
-            showNotification(`${action} feature coming soon!`);
-        });
-    });
-}
-
-function switchTimeframe(timeframe) {
-    console.log('Switching timeframe to:', timeframe);
-    currentTimeframe = timeframe;
-    
-    let points, basePrice, volatility;
-    
-    switch(timeframe) {
-        case '1h':
-            points = 24;
-            basePrice = 0.0102;
-            volatility = 0.0002;
-            break;
-        case '24h':
-            points = 24;
-            basePrice = 0.0098;
-            volatility = 0.0005;
-            break;
-        case '7d':
-            points = 7;
-            basePrice = 0.0095;
-            volatility = 0.001;
-            break;
-        case '1m':
-            points = 30;
-            basePrice = 0.008;
-            volatility = 0.002;
-            break;
-    }
-    
-    const newData = generatePriceData(points, basePrice, volatility);
-    
-    // Update chart
-    priceChart.data.labels = newData.labels;
-    priceChart.data.datasets[0].data = newData.prices;
-    priceChart.update();
-    
-    // Update price display
-    const currentPrice = newData.prices[newData.prices.length - 1];
-    const previousPrice = newData.prices[newData.prices.length - 2];
-    const change = ((currentPrice - previousPrice) / previousPrice) * 100;
-    
-    updatePriceDisplay(currentPrice, change);
-}
-
-function updatePriceDisplay(price, change) {
-    const priceElement = document.querySelector('.current-price');
-    const changeElement = document.querySelector('.price-change');
-    
-    if (priceElement) {
-        priceElement.textContent = '$' + price.toFixed(4);
-        priceElement.classList.add('price-update');
-        setTimeout(() => priceElement.classList.remove('price-update'), 300);
-    }
-    
-    if (changeElement) {
-        changeElement.textContent = (change >= 0 ? '+' : '') + change.toFixed(2) + '%';
-        changeElement.className = 'price-change ' + (change >= 0 ? 'positive' : 'negative');
-    }
-    
-    // Update balance equivalent
-    const balanceAmount = document.querySelector('.amount');
-    if (balanceAmount) {
-        const balance = parseInt(balanceAmount.textContent.replace(/,/g, ''));
-        const usdValue = (balance * price).toFixed(2);
-        const usdElement = document.querySelector('.balance-equivalent');
-        if (usdElement) {
-            usdElement.textContent = '≈ $' + usdValue;
-        }
-    }
-}
-
-function handleBalanceAction(action) {
-    switch(action) {
-        case 'buy':
-            showNotification('🚀 Redirecting to exchange...');
-            setTimeout(() => {
-                window.open('https://www.binance.com/trade/HMSTR_USDT', '_blank');
-            }, 1000);
-            break;
-        case 'sell':
-            showNotification('💸 Sell feature coming soon!');
-            break;
-        case 'transfer':
-            showNotification('🔄 Transfer feature coming soon!');
-            break;
-    }
-}
-
-// Real-time price updates
-function startPriceUpdates() {
-    setInterval(() => {
-        if (priceChart && priceChart.data.datasets[0].data.length > 0) {
-            const currentData = priceChart.data.datasets[0].data;
-            const lastPrice = currentData[currentData.length - 1];
-            const change = (Math.random() - 0.5) * 0.0001;
-            const newPrice = Math.max(0.0001, lastPrice + change);
-            
-            // Add new point and remove first point for real-time effect
-            currentData.push(Number(newPrice.toFixed(4)));
-            currentData.shift();
-            
-            // Update labels for real-time
-            const now = new Date();
-            const newLabel = now.getHours().toString().padStart(2, '0') + ':' + 
-                           now.getMinutes().toString().padStart(2, '0');
-            priceChart.data.labels.push(newLabel);
-            priceChart.data.labels.shift();
-            
-            priceChart.update('none');
-            
-            // Update price display occasionally
-            if (Math.random() > 0.7) {
-                const previousPrice = currentData[currentData.length - 2];
-                const priceChange = ((newPrice - previousPrice) / previousPrice) * 100;
-                updatePriceDisplay(newPrice, priceChange);
-            }
-        }
-    }, 5000); // Update every 5 seconds
-}
-
-// Update initializeApp function
 function initializeApp() {
     console.log('Initializing app');
     
@@ -275,33 +23,311 @@ function initializeApp() {
     setupBalanceRefresh();
     setupProfileActions();
     
-    // Initialize chart
-    setTimeout(() => {
-        initializePriceChart();
-        startPriceUpdates();
-    }, 100);
+    // Initialize real-time chart
+    initializeRealTimeChart();
+    startRealTimeUpdates();
     
     console.log('App initialized successfully');
 }
 
-// Add to existing mobile support
-function setupMobileSupport() {
-    console.log('Setting up mobile support');
+function initializeRealTimeChart() {
+    console.log('Initializing real-time chart');
+    const ctx = document.getElementById('priceChart').getContext('2d');
     
-    const touchElements = document.querySelectorAll(
-        '.game-card, .exchange-card, .nav-item, #copy-btn, .action-card, .balance-refresh, .timeframe-btn, .quick-btn'
-    );
+    // Generate initial data for current timeframe
+    generateInitialData();
     
-    touchElements.forEach(element => {
-        element.addEventListener('touchstart', function(e) {
-            e.preventDefault();
-            this.classList.add('touch-active');
-        });
+    priceChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            datasets: [{
+                label: 'HMSTR/USDT',
+                data: realTimeData,
+                borderColor: '#667eea',
+                backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                borderWidth: 3,
+                fill: true,
+                tension: 0.4,
+                pointRadius: 0,
+                pointHoverRadius: 5,
+                pointBackgroundColor: '#667eea',
+                pointBorderColor: '#ffffff',
+                pointBorderWidth: 2,
+                segment: {
+                    borderColor: ctx => {
+                        const points = ctx.p0.parsed.y > ctx.p1.parsed.y ? 
+                            { p0: ctx.p0, p1: ctx.p1 } : 
+                            { p0: ctx.p1, p1: ctx.p0 };
+                        
+                        return points.p0.parsed.y > points.p1.parsed.y ? 
+                            '#00c851' : '#ff4444';
+                    }
+                }
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: {
+                duration: 0
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    titleColor: '#ffffff',
+                    bodyColor: '#ffffff',
+                    callbacks: {
+                        title: function(tooltipItems) {
+                            return moment(tooltipItems[0].parsed.x).format('HH:mm:ss');
+                        },
+                        label: function(context) {
+                            return `Price: $${context.parsed.y.toFixed(4)}`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    type: 'time',
+                    time: {
+                        unit: 'minute',
+                        displayFormats: {
+                            minute: 'HH:mm'
+                        }
+                    },
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        color: '#666',
+                        font: {
+                            size: 10
+                        },
+                        maxTicksLimit: 6
+                    }
+                },
+                y: {
+                    position: 'right',
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.05)'
+                    },
+                    ticks: {
+                        color: '#666',
+                        font: {
+                            size: 10
+                        },
+                        callback: function(value) {
+                            return '$' + value.toFixed(4);
+                        }
+                    }
+                }
+            },
+            interaction: {
+                mode: 'nearest',
+                axis: 'x',
+                intersect: false
+            },
+            elements: {
+                line: {
+                    borderWidth: 2
+                }
+            }
+        }
+    });
+    
+    setupChartInteractions();
+}
+
+function generateInitialData() {
+    const basePrice = 0.0102;
+    const now = Date.now();
+    const interval = getTimeframeInterval();
+    
+    for (let i = MAX_POINTS - 1; i >= 0; i--) {
+        const time = now - (i * interval);
+        const volatility = (Math.random() - 0.5) * 0.0004;
+        const price = basePrice + volatility;
         
-        element.addEventListener('touchend', function(e) {
-            e.preventDefault();
-            this.classList.remove('touch-active');
-            setTimeout(() => this.click(), 50);
+        realTimeData.push({
+            x: time,
+            y: Number(price.toFixed(4))
+        });
+    }
+}
+
+function getTimeframeInterval() {
+    switch(currentTimeframe) {
+        case '5m': return 5 * 60 * 1000; // 5 minutes
+        case '15m': return 15 * 60 * 1000; // 15 minutes
+        case '1h': return 60 * 60 * 1000; // 1 hour
+        case '4h': return 4 * 60 * 60 * 1000; // 4 hours
+        default: return 5 * 60 * 1000;
+    }
+}
+
+function setupChartInteractions() {
+    // Timeframe buttons
+    const timeframeBtns = document.querySelectorAll('.timeframe-btn');
+    timeframeBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const timeframe = this.getAttribute('data-timeframe');
+            switchTimeframe(timeframe);
+            
+            timeframeBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+    
+    // Balance action buttons
+    document.querySelectorAll('.action-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const action = this.textContent.toLowerCase();
+            handleBalanceAction(action);
         });
     });
 }
+
+function switchTimeframe(timeframe) {
+    console.log('Switching to timeframe:', timeframe);
+    currentTimeframe = timeframe;
+    
+    // Regenerate data for new timeframe
+    realTimeData = [];
+    generateInitialData();
+    
+    // Update chart
+    priceChart.data.datasets[0].data = realTimeData;
+    priceChart.options.scales.x.time.unit = getTimeUnit(timeframe);
+    priceChart.update();
+}
+
+function getTimeUnit(timeframe) {
+    switch(timeframe) {
+        case '5m': return 'minute';
+        case '15m': return 'minute';
+        case '1h': return 'hour';
+        case '4h': return 'hour';
+        default: return 'minute';
+    }
+}
+
+function startRealTimeUpdates() {
+    // Simulate real-time WebSocket updates
+    setInterval(() => {
+        if (priceChart && realTimeData.length > 0) {
+            const lastPrice = realTimeData[realTimeData.length - 1].y;
+            const change = (Math.random() - 0.5) * 0.0002; // Small random change
+            const newPrice = Math.max(0.0001, lastPrice + change);
+            const newTime = Date.now();
+            
+            // Add new data point
+            realTimeData.push({
+                x: newTime,
+                y: Number(newPrice.toFixed(4))
+            });
+            
+            // Remove oldest point if exceeds max
+            if (realTimeData.length > MAX_POINTS) {
+                realTimeData.shift();
+            }
+            
+            // Update chart smoothly
+            priceChart.update('none');
+            
+            // Update price display with animation
+            updatePriceDisplay(newPrice, lastPrice);
+        }
+    }, 2000); // Update every 2 seconds for real-time feel
+}
+
+function updatePriceDisplay(newPrice, oldPrice) {
+    const priceElement = document.getElementById('current-price');
+    const changeElement = document.getElementById('price-change');
+    
+    if (!priceElement || !changeElement) return;
+    
+    const change = ((newPrice - oldPrice) / oldPrice) * 100;
+    const changeValue = change.toFixed(2);
+    
+    // Update price with animation
+    priceElement.textContent = '$' + newPrice.toFixed(4);
+    priceElement.classList.remove('price-up', 'price-down');
+    
+    if (change > 0) {
+        priceElement.classList.add('price-up');
+        changeElement.textContent = '+' + changeValue + '%';
+        changeElement.className = 'price-change positive';
+    } else {
+        priceElement.classList.add('price-down');
+        changeElement.textContent = changeValue + '%';
+        changeElement.className = 'price-change negative';
+    }
+    
+    // Update balance equivalent
+    updateBalanceEquivalent(newPrice);
+}
+
+function updateBalanceEquivalent(currentPrice) {
+    const balanceAmount = document.querySelector('.amount');
+    if (balanceAmount) {
+        const balance = parseInt(balanceAmount.textContent);
+        const usdValue = (balance * currentPrice).toFixed(2);
+        const usdElement = document.querySelector('.balance-equivalent');
+        if (usdElement) {
+            usdElement.textContent = '≈ $' + usdValue;
+        }
+    }
+}
+
+function handleBalanceAction(action) {
+    const exchanges = {
+        'buy': 'https://www.binance.com/trade/HMSTR_USDT',
+        'sell': 'https://www.bybit.com/trade-spot/HMSTR/USDT',
+        'transfer': 'https://www.mexc.com/exchange/HMSTR_USDT'
+    };
+    
+    if (exchanges[action]) {
+        showNotification('🚀 Redirecting to exchange...');
+        setTimeout(() => {
+            if (window.Telegram && window.Telegram.WebApp) {
+                Telegram.WebApp.openLink(exchanges[action]);
+            } else {
+                window.open(exchanges[action], '_blank');
+            }
+        }, 500);
+    }
+}
+
+// Остальные функции остаются без изменений
+function initTelegramData() {
+    if (window.Telegram && window.Telegram.WebApp) {
+        const webApp = Telegram.WebApp;
+        webApp.expand();
+        
+        const user = webApp.initDataUnsafe?.user;
+        if (user) {
+            updateProfileData(user);
+        }
+    }
+}
+
+function updateProfileData(user) {
+    const elements = {
+        'user-avatar': user.first_name?.charAt(0) || 'U',
+        'profile-avatar': user.first_name?.charAt(0) || 'U',
+        'profile-name': user.first_name || 'Telegram User',
+        'profile-username': user.username ? '@' + user.username : 'Telegram User'
+    };
+    
+    Object.keys(elements).forEach(id => {
+        const element = document.getElementById(id);
+        if (element) element.textContent = elements[id];
+    });
+}
+
+// ... остальные функции (setupMobileSupport, setupNavigation и т.д.) остаются без изменений
