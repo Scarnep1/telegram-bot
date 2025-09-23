@@ -42,7 +42,7 @@
                         <div class="game-badge">Hot</div>
                     </div>
 
-                    <!-- Остальные game-card остаются без изменений, но можно добавить аналогичные атрибуты -->
+                    <!-- Остальные game-card остаются без изменений -->
                     <div class="game-card" data-bot="hamsterdev_bot" role="listitem" tabindex="0">
                         <div class="game-image">
                             <div class="game-icon">🎮</div>
@@ -58,15 +58,59 @@
                 </div>
             </section>
 
-            <!-- Остальные секции остаются без изменений -->
             <!-- Wallet Section -->
             <section id="wallet-section" class="content-section">
-                <!-- ... существующий код ... -->
+                <div class="section-header">
+                    <h2>Wallet</h2>
+                    <span class="section-subtitle">Your balance</span>
+                </div>
+                
+                <div class="balance-card">
+                    <div class="balance-header">
+                        <span>Total Balance</span>
+                        <span class="balance-refresh">↻</span>
+                    </div>
+                    <div class="balance-amount">
+                        <span class="amount">1,500</span>
+                        <span class="currency">HMSTR</span>
+                    </div>
+                    <div class="balance-equivalent">≈ $15.00</div>
+                </div>
+                
+                <div class="referral-section">
+                    <h3>Referral Link</h3>
+                    <p>Invite friends and earn rewards</p>
+                    <div class="referral-link">
+                        <input type="text" id="referral-input" value="https://t.me/hamsterbot?start=ref123" readonly>
+                        <button id="copy-btn">Copy</button>
+                    </div>
+                    <div class="referral-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">15</span>
+                            <span class="stat-label">Referred</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">500</span>
+                            <span class="stat-label">Earned</span>
+                        </div>
+                    </div>
+                </div>
             </section>
 
             <!-- Profile Section -->
             <section id="profile-section" class="content-section">
-                <!-- ... существующий код ... -->
+                <div class="section-header">
+                    <h2>Profile</h2>
+                    <span class="section-subtitle">Your account</span>
+                </div>
+                
+                <div class="profile-header">
+                    <div class="profile-avatar">H</div>
+                    <div class="profile-info">
+                        <h2>Hamster User</h2>
+                        <p>@hamster_fan</p>
+                    </div>
+                </div>
             </section>
         </main>
 
