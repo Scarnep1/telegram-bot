@@ -1,194 +1,103 @@
-// Telegram WebApp initialization and configuration
-let tg = window.Telegram.WebApp;
-let currentCurrency = 'usdt';
-let currentTimeframe = '1m';
-
+// Инициализация приложения
 document.addEventListener('DOMContentLoaded', function() {
     initializeApp();
 });
 
 function initializeApp() {
-    console.log('Initializing Hamster Verse app...');
+    // Инициализация навигации
+    initNavigation();
     
-    // Expand the WebApp to full height
-    tg.expand();
+    // Инициализация профиля пользователя
+    initUserProfile();
     
-    setupTelegramUser();
-    setupNavigation();
-    setupGameCards();
-    setupCurrencyToggle();
-    setupTimeframeButtons();
-    initializePriceChart();
-    setupProfileActions();
+    // Инициализация графика цены
+    initPriceChart();
     
-    console.log('App initialized successfully');
+    // Загрузка данных о цене
+    loadPriceData();
 }
 
-// Telegram User Data
-function setupTelegramUser() {
-    const user = tg.initDataUnsafe?.user;
-    
-    if (user) {
-        // Update header avatar
-        const headerAvatar = document.getElementById('user-avatar');
-        if (user.first_name) {
-            headerAvatar.textContent = user.first_name[0].toUpperCase();
-        }
-        
-        // Update profile section
-        updateProfileSection(user);
-    }
-}
-
-function updateProfileSection(user) {
-    const profileAvatar = document.getElementById('profile-avatar');
-    const avatarImg = document.getElementById('avatar-img');
-    const avatarFallback = document.getElementById('avatar-fallback');
-    const profileName = document.getElementById('profile-name');
-    const profileUsername = document.getElementById('profile-username');
-    
-    // Set name
-    if (user.first_name || user.last_name) {
-        const fullName = [user.first_name, user.last_name].filter(Boolean).join(' ');
-        profileName.textContent = fullName;
-    }
-    
-    // Set username
-    if (user.username) {
-        profileUsername.textContent = `@${user.username}`;
-    } else {
-        profileUsername.textContent = 'Telegram User';
-    }
-    
-    // Set avatar
-    if (user.photo_url) {
-        avatarImg.src = user.photo_url;
-        avatarImg.style.display = 'block';
-        avatarFallback.style.display = 'none';
-    } else {
-        avatarFallback.textContent = user.first_name ? user.first_name[0].toUpperCase() : 'U';
-    }
-}
-
-// Navigation
-function setupNavigation() {
+// Навигация между вкладками
+function initNavigation() {
     const navItems = document.querySelectorAll('.nav-item');
-    const sections = document.querySelectorAll('.content-section');
+    const tabContents = document.querySelectorAll('.tab-content');
     
     navItems.forEach(item => {
         item.addEventListener('click', function() {
-            const targetSection = this.getAttribute('data-section');
+            const targetTab = this.getAttribute('data-tab');
             
-            // Update nav
+            // Обновляем активные элементы навигации
             navItems.forEach(nav => nav.classList.remove('active'));
             this.classList.add('active');
             
-            // Update sections
-            sections.forEach(section => section.classList.remove('active'));
-            document.getElementById(targetSection).classList.add('active');
+            // Показываем целевую вкладку
+            tabContents.forEach(tab => tab.classList.remove('active'));
+            document.getElementById(targetTab).classList.add('active');
             
-            // If switching to price section, update chart
-            if (targetSection === 'price-section') {
-                updateChartData(currentTimeframe, currentCurrency);
+            // Если переходим на вкладку Price, обновляем данные
+            if (targetTab === 'price') {
+                loadPriceData();
             }
         });
     });
 }
 
-// Games
-function setupGameCards() {
-    document.querySelectorAll('.game-card').forEach(card => {
-        card.addEventListener('click', function() {
-            const gameUrl = this.getAttribute('data-url');
-            showNotification('Opening game...');
-            
-            // Open game in Telegram
-            tg.openTelegramLink(gameUrl);
-        });
-    });
+// Инициализация профиля пользователя
+function initUserProfile() {
+    // В реальном приложении здесь будет интеграция с Telegram WebApp
+    const user = {
+        name: 'Telegram User',
+        avatar: 'https://via.placeholder.com/100'
+    };
+    
+    document.getElementById('userName').textContent = user.name;
+    document.getElementById('userAvatar').src = user.avatar;
 }
 
-// Currency Toggle
-function setupCurrencyToggle() {
-    document.querySelectorAll('.currency-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const currency = this.getAttribute('data-currency');
-            
-            // Update active button
-            document.querySelectorAll('.currency-btn').forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
-            
-            currentCurrency = currency;
-            updateChartData(currentTimeframe, currency);
-            showNotification(`Switched to ${currency.toUpperCase()}`);
-        });
-    });
-}
-
-// Price Chart
-let priceChart;
-
-function initializePriceChart() {
+// Инициализация графика
+function initPriceChart() {
     const ctx = document.getElementById('priceChart').getContext('2d');
     
-    priceChart = new Chart(ctx, {
+    // Создаем временные данные для демонстрации
+    const labels = [];
+    const data = [];
+    const now = new Date();
+    
+    for (let i = 30; i >= 0; i--) {
+        const date = new Date(now);
+        date.setDate(date.getDate() - i);
+        labels.push(date.toLocaleDateString('ru-RU'));
+        data.push(0.1 + Math.random() * 0.1); // Случайные данные
+    }
+    
+    window.priceChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: [],
+            labels: labels,
             datasets: [{
-                label: 'HMSTR/USDT',
-                data: [],
-                borderColor: '#FF6B35',
-                backgroundColor: 'rgba(255, 107, 53, 0.1)',
-                borderWidth: 3,
+                label: 'HMSTR Price',
+                data: data,
+                borderColor: '#007bff',
+                backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                borderWidth: 2,
                 fill: true,
-                tension: 0.4,
-                pointRadius: 0,
-                pointHoverRadius: 5
+                tension: 0.4
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-                legend: { display: false },
-                tooltip: {
-                    mode: 'index',
-                    intersect: false,
-                    callbacks: {
-                        label: (ctx) => {
-                            const prefix = currentCurrency === 'rub' ? '₽' : '$';
-                            return `${prefix}${ctx.parsed.y.toFixed(4)}`;
-                        }
-                    }
+                legend: {
+                    display: false
                 }
             },
             scales: {
                 x: {
-                    display: true,
-                    grid: { display: false },
-                    ticks: {
-                        maxTicksLimit: 6,
-                        callback: function(value, index, values) {
-                            if (currentTimeframe === '24h') {
-                                return new Date(value).getHours() + ':00';
-                            } else if (currentTimeframe === '7d') {
-                                return new Date(value).toLocaleDateString('ru', { day: 'numeric', month: 'short' });
-                            } else {
-                                return new Date(value).toLocaleDateString('ru', { month: 'short', year: '2-digit' });
-                            }
-                        }
-                    }
+                    display: false
                 },
                 y: {
-                    position: 'right',
-                    grid: { color: 'rgba(0,0,0,0.1)' },
-                    ticks: {
-                        callback: function(value) {
-                            const prefix = currentCurrency === 'rub' ? '₽' : '$';
-                            return `${prefix}${value.toFixed(3)}`;
-                        }
-                    }
+                    display: false
                 }
             },
             interaction: {
@@ -197,156 +106,65 @@ function initializePriceChart() {
             }
         }
     });
-    
-    // Load initial data
-    updateChartData(currentTimeframe, currentCurrency);
 }
 
-function updateChartData(timeframe, currency) {
-    if (!priceChart) return;
-    
-    const data = generatePriceData(timeframe, currency);
-    
-    priceChart.data.labels = data.labels;
-    priceChart.data.datasets[0].data = data.prices;
-    priceChart.data.datasets[0].label = `HMSTR/${currency.toUpperCase()}`;
-    priceChart.update();
-    
-    updatePriceDisplay(data.prices, currency);
-    updateMarketStats(data.marketStats);
-}
-
-function generatePriceData(timeframe, currency) {
-    const now = Date.now();
-    let points, days, basePrice, usdToRub = 90; // Примерный курс
-    
-    switch(timeframe) {
-        case '24h':
-            points = 24;
-            days = 1;
-            break;
-        case '7d':
-            points = 7;
-            days = 7;
-            break;
-        case '1m':
-            points = 30;
-            days = 30;
-            break;
-        case '3m':
-            points = 12;
-            days = 90;
-            break;
-        case 'max':
-            points = 24;
-            days = 365;
-            break;
-        default:
-            points = 30;
-            days = 30;
-    }
-    
-    const prices = [];
-    const labels = [];
-    let currentPrice = currency === 'rub' ? 0.0102 * usdToRub : 0.0102;
-    
-    // Генерация реалистичных данных
-    for (let i = points - 1; i >= 0; i--) {
-        const time = new Date(now - (i * (days * 24 * 60 * 60 * 1000)) / points);
-        labels.push(time.getTime());
-        
-        // Реалистичное движение цены с трендом
-        const volatility = 0.02; // 2% волатильность
-        const trend = 0.001; // Небольшой восходящий тренд
-        
-        const change = (Math.random() - 0.5) * volatility + trend;
-        currentPrice = Math.max(0.005, currentPrice * (1 + change));
-        
-        if (currency === 'rub') {
-            prices.push(Number((currentPrice * usdToRub).toFixed(4)));
-        } else {
-            prices.push(Number(currentPrice.toFixed(4)));
-        }
-    }
-    
-    // Генерация рыночной статистики
-    const marketStats = {
-        marketCap: (currentPrice * 10000000000).toFixed(1) + 'B', // 10B supply
-        totalSupply: '10B',
-        volume24h: (currentPrice * 500000000).toFixed(1) + 'M' // 500M volume
-    };
-    
-    return { prices, labels, marketStats };
-}
-
-function updatePriceDisplay(prices, currency) {
-    const currentPrice = prices[prices.length - 1];
-    const previousPrice = prices[prices.length - 2];
-    const changePercent = ((currentPrice - previousPrice) / previousPrice) * 100;
-    
-    const priceElement = document.getElementById('current-price');
-    const changeElement = document.getElementById('price-change');
-    
-    const prefix = currency === 'rub' ? '₽' : '$';
-    priceElement.textContent = `${prefix}${currentPrice.toFixed(4)}`;
-    
-    changeElement.textContent = `${changePercent >= 0 ? '+' : ''}${changePercent.toFixed(2)}%`;
-    changeElement.className = `price-change ${changePercent >= 0 ? 'positive' : 'negative'}`;
-}
-
-function updateMarketStats(stats) {
-    document.getElementById('market-cap').textContent = `$${stats.marketCap}`;
-    document.getElementById('total-supply').textContent = stats.totalSupply;
-    document.getElementById('volume-24h').textContent = `$${stats.volume24h}`;
-}
-
-// Timeframe buttons
-function setupTimeframeButtons() {
-    document.querySelectorAll('.timeframe-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const timeframe = this.getAttribute('data-timeframe');
-            
-            // Update active button
-            document.querySelectorAll('.timeframe-btn').forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
-            
-            currentTimeframe = timeframe;
-            updateChartData(timeframe, currentCurrency);
-        });
-    });
-}
-
-// Profile Actions
-function setupProfileActions() {
-    document.getElementById('invite-btn').addEventListener('click', function() {
-        const inviteText = "Join Hamster Verse - awesome games and HMSTR token!";
-        tg.shareUrl(inviteText, "https://t.me/your_bot_link");
-        showNotification('Invite link copied!');
-    });
-    
-    document.getElementById('settings-btn').addEventListener('click', function() {
-        showNotification('Settings coming soon!');
-    });
-}
-
-// Notification System
-function showNotification(message) {
-    const notification = document.getElementById('notification');
-    notification.textContent = message;
-    notification.classList.add('show');
-    
+// Загрузка данных о цене (заглушка - в реальном приложении будет API)
+function loadPriceData() {
+    // Имитация загрузки данных
     setTimeout(() => {
-        notification.classList.remove('show');
-    }, 2000);
+        const usdtPrice = (0.15 + Math.random() * 0.05).toFixed(4);
+        const rubPrice = (usdtPrice * 90).toFixed(2); // Примерный курс
+        const change = (Math.random() * 10 - 5).toFixed(2);
+        
+        document.getElementById('currentPriceUSDT').textContent = `$${usdtPrice}`;
+        document.getElementById('currentPriceRUB').textContent = `${rubPrice} ₽`;
+        
+        const changeElement = document.getElementById('priceChange');
+        changeElement.textContent = `${change > 0 ? '+' : ''}${change}%`;
+        changeElement.className = `price-change ${change < 0 ? 'negative' : ''}`;
+        
+        // Обновляем рыночные данные
+        document.getElementById('marketCap').textContent = `$${(usdtPrice * 1000000000).toLocaleString()}`;
+        document.getElementById('totalSupply').textContent = '1,000,000,000 HMSTR';
+        document.getElementById('volume24h').textContent = `$${(usdtPrice * 1000000).toLocaleString()}`;
+    }, 500);
 }
 
-// Handle WebApp events
-tg.onEvent('viewportChanged', (event) => {
-    console.log('Viewport changed:', event);
+// Открытие игры в Telegram
+function openGame(url) {
+    // В реальном приложении будет использоваться Telegram WebApp API
+    window.open(url, '_blank');
+}
+
+// Обработчики для кнопок временных интервалов
+document.querySelectorAll('.time-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        
+        // Здесь будет обновление данных графика по выбранному периоду
+        const timeframe = this.getAttribute('data-time');
+        updateChartTimeframe(timeframe);
+    });
 });
 
-// Error handling
-window.addEventListener('error', (event) => {
-    console.error('Global error:', event.error);
-    showNotification('Something went wrong!');
-});
+function updateChartTimeframe(timeframe) {
+    // В реальном приложении здесь будет загрузка данных для выбранного периода
+    console.log('Updating chart for timeframe:', timeframe);
+}
+
+// Интеграция с Telegram WebApp (раскомментировать при развертывании в Telegram)
+/*
+const tg = window.Telegram.WebApp;
+tg.expand();
+tg.enableClosingConfirmation();
+
+// Получение данных пользователя
+const user = tg.initDataUnsafe?.user;
+if (user) {
+    document.getElementById('userName').textContent = user.first_name || 'Telegram User';
+    if (user.photo_url) {
+        document.getElementById('userAvatar').src = user.photo_url;
+    }
+}
+*/
