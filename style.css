@@ -9,6 +9,7 @@ body {
     background-color: #ffffff;
     color: #1a1a1a;
     line-height: 1.5;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .app-container {
@@ -63,6 +64,7 @@ body {
 
 .content-section.active {
     display: block;
+    animation: fadeIn 0.3s ease;
 }
 
 /* Section Headers */
@@ -80,6 +82,16 @@ body {
     color: #666;
     font-size: 14px;
     font-weight: 500;
+}
+
+.section-subheader {
+    margin: 30px 0 16px 0;
+}
+
+.section-subheader h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 4px;
 }
 
 /* Games Grid */
@@ -100,6 +112,12 @@ body {
     transition: all 0.3s ease;
     border: 1px solid #e9ecef;
     cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.game-card:active {
+    transform: scale(0.98);
 }
 
 .game-card:hover {
@@ -151,6 +169,7 @@ body {
     display: grid;
     grid-template-columns: 1fr;
     gap: 12px;
+    margin-bottom: 24px;
 }
 
 .exchange-card {
@@ -163,6 +182,12 @@ body {
     transition: all 0.3s ease;
     border: 1px solid #e9ecef;
     cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.exchange-card:active {
+    transform: scale(0.98);
 }
 
 .exchange-card:hover {
@@ -174,7 +199,6 @@ body {
 .exchange-logo {
     width: 50px;
     height: 50px;
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
     border-radius: 12px;
     display: flex;
     align-items: center;
@@ -232,6 +256,90 @@ body {
     color: #666;
     font-size: 14px;
 }
+
+.profile-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.stat-card {
+    background: #f8f9fa;
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.stat-icon {
+    font-size: 24px;
+}
+
+.stat-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: #667eea;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: #666;
+}
+
+.profile-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+}
+
+.action-card {
+    background: #f8f9fa;
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.action-card:active {
+    transform: scale(0.98);
+}
+
+.action-icon {
+    font-size: 20px;
+}
+
+.action-info {
+    flex: 1;
+}
+
+.action-info h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.action-info p {
+    font-size: 12px;
+    color: #666;
+}
+
+.action-arrow {
+    color: #666;
+    font-size: 18px;
+}
+
 .balance-card {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
@@ -253,6 +361,12 @@ body {
 .balance-refresh {
     cursor: pointer;
     font-size: 16px;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.balance-refresh:active {
+    transform: scale(0.9);
 }
 
 .balance-amount {
@@ -320,11 +434,12 @@ body {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
-#copy-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+#copy-btn:active {
+    transform: scale(0.95);
 }
 
 .referral-stats {
@@ -366,6 +481,7 @@ body {
     backdrop-filter: blur(10px);
     max-width: 400px;
     margin: 0 auto;
+    z-index: 1000;
 }
 
 .nav-item {
@@ -380,6 +496,12 @@ body {
     cursor: pointer;
     transition: all 0.3s ease;
     opacity: 0.6;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.nav-item:active {
+    transform: scale(0.95);
 }
 
 .nav-item.active {
@@ -407,9 +529,10 @@ body {
     padding: 12px 24px;
     border-radius: 12px;
     font-size: 14px;
-    z-index: 1000;
+    z-index: 2000;
     opacity: 0;
     transition: opacity 0.3s ease;
+    pointer-events: none;
 }
 
 .notification.show {
@@ -451,32 +574,13 @@ body {
     }
 }
 
-.content-section.active {
-    animation: fadeIn 0.3s ease;
-}
-/* Debug styles - remove in production */
-.debug-outline {
-    outline: 2px solid red !important;
-}
-
-/* Ensure clickable elements are properly styled */
-.game-card, .exchange-card, .nav-item, #copy-btn {
-    cursor: pointer;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-}
-
-/* Improve button active states */
-.nav-item:active, #copy-btn:active, .game-card:active, .exchange-card:active {
-    transform: scale(0.98);
-    transition: transform 0.1s ease;
-}
-
-/* Ensure elements are above others */
-.bottom-nav {
-    z-index: 1000;
-}
-
-.notification {
-    z-index: 2000;
+/* Mobile touch improvements */
+@media (hover: none) and (pointer: coarse) {
+    .game-card:hover, .exchange-card:hover, .action-card:hover {
+        transform: none;
+    }
+    
+    .game-card:active, .exchange-card:active, .action-card:active {
+        transform: scale(0.98);
+    }
 }
