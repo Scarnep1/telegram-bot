@@ -1,30 +1,119 @@
-/* Real-time Chart Styles */
-.chart-container {
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
     background: #ffffff;
+    color: #1a1a1a;
+    line-height: 1.5;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.app-container {
+    max-width: 400px;
+    margin: 0 auto;
+    min-height: 100vh;
+    padding-bottom: 80px;
+    background: #f8f9fa;
+}
+
+/* Header */
+.header {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 20px 16px;
+    border-radius: 0 0 20px 20px;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.app-title {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+}
+
+/* Main Content */
+.main-content {
+    padding: 20px 16px;
+}
+
+.content-section {
+    display: none;
+}
+
+.content-section.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+.section-header {
+    margin-bottom: 24px;
+}
+
+.section-header h2 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.section-subtitle {
+    color: #666;
+    font-size: 14px;
+}
+
+.section-subheader {
+    margin: 30px 0 16px 0;
+}
+
+.section-subheader h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+/* Real-time Chart */
+.chart-container {
+    background: white;
     border-radius: 20px;
     padding: 20px;
-    margin-bottom: 20px;
-    border: 1px solid #e9ecef;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: 16px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
 .chart-header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 15px;
+    align-items: center;
+    margin-bottom: 16px;
 }
 
 .price-info {
     display: flex;
-    flex-direction: column;
-    gap: 4px;
+    align-items: center;
+    gap: 12px;
 }
 
 .current-price {
     font-size: 28px;
     font-weight: 700;
-    color: #1a1a1a;
 }
 
 .price-change {
@@ -32,7 +121,6 @@
     border-radius: 6px;
     font-size: 14px;
     font-weight: 600;
-    width: fit-content;
 }
 
 .price-change.positive {
@@ -61,7 +149,6 @@
     font-size: 12px;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.3s ease;
 }
 
 .timeframe-btn.active {
@@ -70,94 +157,76 @@
 }
 
 .chart-wrapper {
-    position: relative;
-    height: 250px;
+    height: 200px;
     width: 100%;
 }
 
-#priceChart {
-    width: 100% !important;
-    height: 100% !important;
-}
-
-/* Balance Info (упрощенная версия) */
+/* Balance Info */
 .balance-info {
-    background: #f8f9fa;
-    border-radius: 16px;
+    background: white;
+    border-radius: 20px;
     padding: 20px;
-    margin-bottom: 20px;
-    border: 1px solid #e9ecef;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
-.balance-item {
-    margin-bottom: 15px;
+.balance-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
 }
 
 .balance-label {
-    display: block;
-    font-size: 14px;
-    color: #666;
-    margin-bottom: 8px;
-    font-weight: 500;
-}
-
-.balance-amount {
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-    margin-bottom: 4px;
-}
-
-.amount {
-    font-size: 24px;
-    font-weight: 700;
-    color: #1a1a1a;
-}
-
-.currency {
     font-size: 16px;
     color: #666;
 }
 
-.balance-equivalent {
+.balance-numbers {
+    text-align: right;
+}
+
+.hmstr-amount {
+    display: block;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.usd-amount {
+    display: block;
     font-size: 14px;
     color: #666;
 }
 
-.balance-actions {
+.balance-buttons {
     display: flex;
     gap: 10px;
 }
 
-.action-btn {
+.balance-btn {
     flex: 1;
-    padding: 12px 16px;
+    padding: 12px;
     border: none;
     border-radius: 12px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
     font-size: 14px;
 }
 
 .buy-btn {
-    background: linear-gradient(135deg, #00c851, #007e33);
+    background: #00c851;
     color: white;
 }
 
 .sell-btn {
-    background: linear-gradient(135deg, #ff4444, #cc0000);
+    background: #ff4444;
     color: white;
 }
 
 .transfer-btn {
-    background: #ffffff;
+    background: #f8f9fa;
     color: #666;
-    border: 1px solid #e9ecef;
-}
-
-.action-btn:active {
-    transform: scale(0.95);
+    border: 1px solid #ddd;
 }
 
 /* Market Stats */
@@ -165,61 +234,105 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
 }
 
-.market-stats .stat-item {
-    background: #f8f9fa;
+.stat-card {
+    background: white;
     border-radius: 12px;
-    padding: 12px;
+    padding: 16px;
     text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
-.market-stats .stat-label {
+.stat-value {
     display: block;
-    font-size: 10px;
-    color: #666;
+    font-size: 16px;
+    font-weight: 700;
     margin-bottom: 4px;
-    font-weight: 500;
 }
 
-.market-stats .stat-value {
-    display: block;
-    font-size: 14px;
-    font-weight: 600;
-    color: #1a1a1a;
+.stat-label {
+    font-size: 12px;
+    color: #666;
 }
 
-/* Exchange Cards */
-.exchanges-list {
+/* Games Grid */
+.games-grid {
     display: grid;
-    grid-template-columns: 1fr;
     gap: 12px;
-    margin-bottom: 20px;
 }
 
-.exchange-card {
-    background: #f8f9fa;
+.game-card {
+    background: white;
     border-radius: 16px;
     padding: 16px;
     display: flex;
     align-items: center;
     gap: 12px;
-    transition: all 0.3s ease;
-    border: 1px solid #e9ecef;
     cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.game-image {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+
+.game-info h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.game-info p {
+    font-size: 14px;
+    color: #666;
+}
+
+.game-badge {
+    background: #ff4444;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: 600;
+    margin-left: auto;
+}
+
+/* Exchanges */
+.exchanges-list {
+    display: grid;
+    gap: 12px;
+}
+
+.exchange-card {
+    background: white;
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
 .exchange-logo {
-    width: 44px;
-    height: 44px;
+    width: 40px;
+    height: 40px;
+    background: #667eea;
     border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 700;
     color: white;
-    font-size: 16px;
+    font-weight: 700;
 }
 
 .exchange-info {
@@ -227,7 +340,7 @@
 }
 
 .exchange-info h3 {
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 600;
     margin-bottom: 2px;
 }
@@ -237,75 +350,147 @@
     color: #666;
 }
 
-.exchange-price {
-    text-align: right;
-    margin-right: 10px;
-}
-
-.exchange-price .price {
-    display: block;
-    font-size: 14px;
-    font-weight: 600;
-    color: #1a1a1a;
-}
-
-.exchange-price .volume {
-    display: block;
-    font-size: 10px;
-    color: #666;
-    margin-top: 2px;
-}
-
 .exchange-arrow {
     color: #666;
     font-size: 18px;
 }
 
-/* Price update animations */
-@keyframes priceUp {
-    0% { color: #1a1a1a; }
-    50% { color: #00c851; }
-    100% { color: #1a1a1a; }
+/* Profile */
+.profile-card {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
-@keyframes priceDown {
-    0% { color: #1a1a1a; }
-    50% { color: #ff4444; }
-    100% { color: #1a1a1a; }
+.profile-avatar {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: white;
+    font-weight: 700;
 }
 
-.price-up {
-    animation: priceUp 0.5s ease;
+.profile-info h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 4px;
 }
 
-.price-down {
-    animation: priceDown 0.5s ease;
+.profile-info p {
+    color: #666;
+    font-size: 14px;
 }
 
-/* Responsive */
+.profile-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.stat-item {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.stat-number {
+    display: block;
+    font-size: 24px;
+    font-weight: 700;
+    color: #667eea;
+    margin-bottom: 4px;
+}
+
+/* Bottom Navigation */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    display: flex;
+    padding: 12px;
+    border-top: 1px solid #e9ecef;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    border: none;
+    padding: 8px;
+    border-radius: 12px;
+    cursor: pointer;
+    opacity: 0.6;
+}
+
+.nav-item.active {
+    opacity: 1;
+    background: #f8f9fa;
+}
+
+.nav-icon {
+    font-size: 20px;
+}
+
+.nav-label {
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* Notification */
+.notification {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.8);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 12px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+}
+
+.notification.show {
+    opacity: 1;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Mobile */
 @media (max-width: 480px) {
-    .chart-container {
-        padding: 15px;
+    .main-content {
+        padding: 16px 12px;
+    }
+    
+    .chart-wrapper {
+        height: 180px;
     }
     
     .current-price {
         font-size: 24px;
-    }
-    
-    .chart-wrapper {
-        height: 200px;
-    }
-    
-    .balance-info {
-        padding: 15px;
-    }
-    
-    .amount {
-        font-size: 20px;
-    }
-    
-    .action-btn {
-        padding: 10px 12px;
-        font-size: 13px;
     }
 }
