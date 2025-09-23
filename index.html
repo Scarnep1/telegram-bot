@@ -2,11 +2,10 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Hamster Menu</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Preload critical resources -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 </head>
@@ -16,7 +15,7 @@
         <header class="header" role="banner">
             <div class="header-content">
                 <h1 class="app-title">Hamster Menu</h1>
-                <div class="user-avatar" aria-label="User avatar">H</div>
+                <div class="user-avatar" id="user-avatar">H</div>
             </div>
         </header>
 
@@ -26,12 +25,11 @@
             <section id="games-section" class="content-section active" aria-labelledby="games-heading">
                 <div class="section-header">
                     <h2 id="games-heading">Games</h2>
-                    <span class="section-subtitle">Social media</span>
+                    <span class="section-subtitle">Play and earn</span>
                 </div>
                 
                 <div class="games-grid" role="list">
-                    <!-- Game cards remain the same -->
-                    <div class="game-card" data-bot="hamsterkombat_bot" role="listitem" tabindex="0" aria-label="Hamster Kombat - Tap to earn coins">
+                    <div class="game-card" data-bot="hamsterkombat_bot" role="listitem" tabindex="0">
                         <div class="game-image">
                             <div class="game-icon">🐹</div>
                         </div>
@@ -42,7 +40,6 @@
                         <div class="game-badge">Hot</div>
                     </div>
 
-                    <!-- Остальные game-card остаются без изменений -->
                     <div class="game-card" data-bot="hamsterdev_bot" role="listitem" tabindex="0">
                         <div class="game-image">
                             <div class="game-icon">🎮</div>
@@ -53,8 +50,26 @@
                         </div>
                     </div>
 
-                    <!-- ... остальные карточки ... -->
+                    <div class="game-card" data-bot="notcoin_bot" role="listitem" tabindex="0">
+                        <div class="game-image">
+                            <div class="game-icon">🪙</div>
+                        </div>
+                        <div class="game-info">
+                            <h3>Notcoin</h3>
+                            <p>Tap to earn</p>
+                        </div>
+                        <div class="game-badge new">New</div>
+                    </div>
 
+                    <div class="game-card" data-bot="catizen_bot" role="listitem" tabindex="0">
+                        <div class="game-image">
+                            <div class="game-icon">😺</div>
+                        </div>
+                        <div class="game-info">
+                            <h3>Catizen</h3>
+                            <p>Raise cats</p>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -62,7 +77,7 @@
             <section id="wallet-section" class="content-section">
                 <div class="section-header">
                     <h2>Wallet</h2>
-                    <span class="section-subtitle">Your balance</span>
+                    <span class="section-subtitle">Your balance & exchanges</span>
                 </div>
                 
                 <div class="balance-card">
@@ -76,10 +91,53 @@
                     </div>
                     <div class="balance-equivalent">≈ $15.00</div>
                 </div>
+
+                <div class="section-subheader">
+                    <h3>Buy HMSTR on Exchanges</h3>
+                    <span class="section-subtitle">Available markets</span>
+                </div>
+                
+                <div class="exchanges-list">
+                    <div class="exchange-card" data-url="https://www.bybit.com/trade-spot/HMSTR/USDT">
+                        <div class="exchange-logo" style="background: linear-gradient(135deg, #00c0f3, #0066ff);">B</div>
+                        <div class="exchange-info">
+                            <h3>Bybit</h3>
+                            <p>Spot trading • High liquidity</p>
+                        </div>
+                        <div class="exchange-arrow">→</div>
+                    </div>
+
+                    <div class="exchange-card" data-url="https://www.mexc.com/exchange/HMSTR_USDT">
+                        <div class="exchange-logo" style="background: linear-gradient(135deg, #00c851, #007e33);">M</div>
+                        <div class="exchange-info">
+                            <h3>MEXC</h3>
+                            <p>Zero maker fees • Fast registration</p>
+                        </div>
+                        <div class="exchange-arrow">→</div>
+                    </div>
+
+                    <div class="exchange-card" data-url="https://www.binance.com/trade/HMSTR_USDT">
+                        <div class="exchange-logo" style="background: linear-gradient(135deg, #f0b90b, #f8d12f);">B</div>
+                        <div class="exchange-info">
+                            <h3>Binance</h3>
+                            <p>Largest volume • Advanced tools</p>
+                        </div>
+                        <div class="exchange-arrow">→</div>
+                    </div>
+
+                    <div class="exchange-card" data-url="https://www.okx.com/trade-spot/HMSTR-USDT">
+                        <div class="exchange-logo" style="background: linear-gradient(135deg, #000000, #4a4a4a);">O</div>
+                        <div class="exchange-info">
+                            <h3>OKX</h3>
+                            <p>Secure platform • Staking available</p>
+                        </div>
+                        <div class="exchange-arrow">→</div>
+                    </div>
+                </div>
                 
                 <div class="referral-section">
                     <h3>Referral Link</h3>
-                    <p>Invite friends and earn rewards</p>
+                    <p>Invite friends and earn 10% from their rewards</p>
                     <div class="referral-link">
                         <input type="text" id="referral-input" value="https://t.me/hamsterbot?start=ref123" readonly>
                         <button id="copy-btn">Copy</button>
@@ -91,7 +149,7 @@
                         </div>
                         <div class="stat-item">
                             <span class="stat-number">500</span>
-                            <span class="stat-label">Earned</span>
+                            <span class="stat-label">Earned HMSTR</span>
                         </div>
                     </div>
                 </div>
@@ -101,14 +159,60 @@
             <section id="profile-section" class="content-section">
                 <div class="section-header">
                     <h2>Profile</h2>
-                    <span class="section-subtitle">Your account</span>
+                    <span class="section-subtitle">Your account settings</span>
                 </div>
                 
                 <div class="profile-header">
-                    <div class="profile-avatar">H</div>
+                    <div class="profile-avatar" id="profile-avatar">U</div>
                     <div class="profile-info">
-                        <h2>Hamster User</h2>
-                        <p>@hamster_fan</p>
+                        <h2 id="profile-name">Telegram User</h2>
+                        <p id="profile-username">@username</p>
+                    </div>
+                </div>
+
+                <div class="profile-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">🎮</div>
+                        <div class="stat-info">
+                            <span class="stat-value">4</span>
+                            <span class="stat-label">Active Games</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📅</div>
+                        <div class="stat-info">
+                            <span class="stat-value">15</span>
+                            <span class="stat-label">Days in App</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-actions">
+                    <div class="action-card">
+                        <div class="action-icon">⚙️</div>
+                        <div class="action-info">
+                            <h3>Settings</h3>
+                            <p>App preferences</p>
+                        </div>
+                        <div class="action-arrow">→</div>
+                    </div>
+                    
+                    <div class="action-card">
+                        <div class="action-icon">🔄</div>
+                        <div class="action-info">
+                            <h3>Sync Data</h3>
+                            <p>Update from Telegram</p>
+                        </div>
+                        <div class="action-arrow">→</div>
+                    </div>
+                    
+                    <div class="action-card">
+                        <div class="action-icon">🔒</div>
+                        <div class="action-info">
+                            <h3>Privacy</h3>
+                            <p>Data protection</p>
+                        </div>
+                        <div class="action-arrow">→</div>
                     </div>
                 </div>
             </section>
@@ -116,26 +220,25 @@
 
         <!-- Bottom Navigation -->
         <nav class="bottom-nav" role="navigation" aria-label="Main navigation">
-            <button class="nav-item active" data-section="games-section" type="button" aria-label="Games section">
+            <button class="nav-item active" data-section="games-section" type="button">
                 <span class="nav-icon">🎮</span>
                 <span class="nav-label">Games</span>
             </button>
-            <button class="nav-item" data-section="wallet-section" type="button" aria-label="Wallet section">
+            <button class="nav-item" data-section="wallet-section" type="button">
                 <span class="nav-icon">💰</span>
                 <span class="nav-label">Wallet</span>
             </button>
-            <button class="nav-item" data-section="profile-section" type="button" aria-label="Profile section">
+            <button class="nav-item" data-section="profile-section" type="button">
                 <span class="nav-icon">👤</span>
                 <span class="nav-label">Profile</span>
             </button>
         </nav>
 
         <!-- Notification -->
-        <div id="notification" class="notification" role="alert" aria-live="polite">Link copied to clipboard!</div>
+        <div id="notification" class="notification" role="alert" aria-live="polite"></div>
     </div>
-    <script src="script.js"></script>
+    <script src="script.js?v=2"></script>
     
-    <!-- Fallback for slow loading -->
     <noscript>
         <style>
             .content-section { display: block !important; }
