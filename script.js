@@ -30,7 +30,7 @@ function setupNavigation() {
     const navItems = document.querySelectorAll('.nav-item');
     const sections = document.querySelectorAll('.content-section');
     
-    console.log(Found ${navItems.length} nav items);
+    console.log('Found ' + navItems.length + ' nav items');
     
     navItems.forEach(item => {
         item.addEventListener('click', function() {
@@ -54,9 +54,9 @@ function setupNavigation() {
             const targetElement = document.getElementById(targetSection);
             if (targetElement) {
                 targetElement.classList.add('active');
-                console.log(Showing section: ${targetSection});
+                console.log('Showing section: ' + targetSection);
             } else {
-                console.error(Section not found: ${targetSection});
+                console.error('Section not found: ' + targetSection);
             }
         });
     });
@@ -66,7 +66,7 @@ function setupGameCards() {
     console.log('Setting up game cards');
     const gameCards = document.querySelectorAll('.game-card');
     
-    console.log(Found ${gameCards.length} game cards);
+    console.log('Found ' + gameCards.length + ' game cards');
     
     gameCards.forEach(card => {
         card.addEventListener('click', function() {
@@ -75,11 +75,11 @@ function setupGameCards() {
             
             if (botUsername) {
                 // Simulate opening Telegram bot
-                alert(Opening bot: ${botUsername}\n\nIn real Telegram Mini App, this would open the bot directly.);
+                alert('Opening bot: ' + botUsername + '\n\nIn real Telegram Mini App, this would open the bot directly.');
                 
                 // For actual Telegram Mini App, use:
                 // if (window.Telegram && window.Telegram.WebApp) {
-                //     window.Telegram.WebApp.openTelegramLink(https://t.me/${botUsername});
+                //     window.Telegram.WebApp.openTelegramLink('https://t.me/' + botUsername);
                 // }
             }
         });
@@ -90,7 +90,7 @@ function setupExchangeCards() {
     console.log('Setting up exchange cards');
     const exchangeCards = document.querySelectorAll('.exchange-card');
     
-    console.log(Found ${exchangeCards.length} exchange cards);
+    console.log('Found ' + exchangeCards.length + ' exchange cards');
     
     exchangeCards.forEach(card => {
         card.addEventListener('click', function() {
@@ -192,10 +192,10 @@ function setupBalanceRefresh() {
             const usdValue = (newBalance * 0.01).toFixed(2);
             const usdElement = document.querySelector('.balance-equivalent');
             if (usdElement) {
-                usdElement.textContent = ≈ $${usdValue};
+                usdElement.textContent = '≈ $' + usdValue;
             }
             
-            console.log(Balance updated to: ${newBalance});
+            console.log('Balance updated to: ' + newBalance);
         }, 1000);
     });
 }
@@ -227,15 +227,16 @@ function checkElements() {
     requiredElements.forEach(id => {
         const element = document.getElementById(id);
         if (!element) {
-            console.error(Element with id '${id}' not found!);
+            console.error('Element with id "' + id + '" not found!');
         } else {
-            console.log(Element '${id}' found);
+            console.log('Element "' + id + '" found');
         }
     });
 }
 
 // Check elements on load
 setTimeout(checkElements, 100);
+
 // Simulate user activity for demo
 function simulateUserActivity() {
     setInterval(() => {
@@ -249,7 +250,7 @@ function simulateUserActivity() {
             const usdValue = (newBalance * 0.01).toFixed(2);
             const usdElement = document.querySelector('.balance-equivalent');
             if (usdElement) {
-                usdElement.textContent = ≈ $${usdValue};
+                usdElement.textContent = '≈ $' + usdValue;
             }
         }
     }, 30000);
