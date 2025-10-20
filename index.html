@@ -3,131 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hamster Verse</title>
+    <title>EuroDelivery - Доставка продуктов из Евроопта</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="app-container">
-        <!-- Контент -->
-        <div class="content">
-            <!-- Вкладка Games -->
-            <div id="games" class="tab-content active">
-                <header class="page-header">
-                    <h1>Hamster Verse</h1>
-                    <p class="subtitle">Games</p>
-                </header>
-                
-                <div class="games-grid">
-                    <div class="game-card" onclick="openGame('https://t.me/Hamster_GAme_Dev_bot/start?startapp=kentId6823288584')">
-                        <div class="game-icon">🐹</div>
-                        <h3>Hamster Kombat</h3>
-                        <p>Tap to earn coins</p>
-                        <span class="hot-badge">Hot</span>
-                    </div>
-                    
-                    <div class="game-card" onclick="openGame('https://t.me/hamsterking_game_bot?startapp=6823288584')">
-                        <div class="game-icon">👑</div>
-                        <h3>Hamster King</h3>
-                        <p>Build your kingdom</p>
-                    </div>
-                    
-                    <div class="game-card" onclick="openGame('https://t.me/hamster_fightclub_bot?startapp=NWE1YjA2YWUtZTAyMS01ZjA1LTg4ZTYtMGZmZjUwNDQwNjU5')">
-                        <div class="game-icon">🥊</div>
-                        <h3>Hamster Fight Club</h3>
-                        <p>Fight and win</p>
-                    </div>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <i class="fas fa-shopping-basket"></i>
+                    <span>EuroDelivery</span>
                 </div>
-            </div>
-
-            <!-- Вкладка Price -->
-            <div id="price" class="tab-content">
-                <header class="page-header">
-                    <h1>HMSTR Price</h1>
-                    <p class="subtitle">Real-time tracking</p>
-                </header>
                 
-                <div class="price-container">
-                    <div class="timeframe-selector">
-                        <button class="time-btn active" data-time="24h">24H</button>
-                        <button class="time-btn" data-time="7d">7D</button>
-                        <button class="time-btn" data-time="1m">1M</button>
-                        <button class="time-btn" data-time="3m">3M</button>
-                        <button class="time-btn" data-time="max">MAX</button>
-                    </div>
-                    
-                    <div class="chart-container">
-                        <canvas id="priceChart"></canvas>
-                    </div>
-                    
-                    <div class="price-info">
-                        <div class="current-price">
-                            <span class="price-usdt" id="currentPriceUSDT">$0.00</span>
-                            <span class="price-rub" id="currentPriceRUB">0.00 ₽</span>
-                            <span class="price-change" id="priceChange">+0.00%</span>
-                        </div>
-                    </div>
-                    
-                    <div class="market-stats">
-                        <div class="stat-item">
-                            <span class="stat-label">Market Cap</span>
-                            <span class="stat-value" id="marketCap">$0</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">Total Supply</span>
-                            <span class="stat-value" id="totalSupply">0 HMSTR</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">24h Volume</span>
-                            <span class="stat-value" id="volume24h">$0</span>
-                        </div>
-                    </div>
+                <div class="search-bar">
+                    <input type="text" placeholder="Поиск продуктов...">
+                    <button><i class="fas fa-search"></i></button>
                 </div>
-            </div>
-
-            <!-- Вкладка Profile -->
-            <div id="profile" class="tab-content">
-                <header class="page-header">
-                    <h1>Profile</h1>
-                    <p class="subtitle">Your account</p>
-                </header>
                 
-                <div class="profile-container">
-                    <div class="avatar-section">
-                        <img id="userAvatar" src="" alt="Avatar" class="avatar">
-                        <h2 id="userName">User Name</h2>
-                    </div>
-                    
-                    <div class="profile-stats">
-                        <div class="profile-stat">
-                            <span class="stat-label">Games Played</span>
-                            <span class="stat-value">3</span>
-                        </div>
-                        <div class="profile-stat">
-                            <span class="stat-label">Total Earnings</span>
-                            <span class="stat-value">0 HMSTR</span>
-                        </div>
-                    </div>
+                <div class="nav-links">
+                    <a href="#" class="nav-link"><i class="fas fa-user"></i> Войти</a>
+                    <a href="#" class="nav-link cart-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">0</span>
+                    </a>
                 </div>
-            </div>
-        </div>
-
-        <!-- Навигация внизу -->
-        <nav class="bottom-navbar">
-            <div class="nav-item active" data-tab="games">
-                <div class="nav-icon">🎮</div>
-                <span class="nav-label">Games</span>
-            </div>
-            <div class="nav-item" data-tab="price">
-                <div class="nav-icon">📊</div>
-                <span class="nav-label">Price</span>
-            </div>
-            <div class="nav-item" data-tab="profile">
-                <div class="nav-icon">👤</div>
-                <span class="nav-label">Profile</span>
             </div>
         </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Свежие продукты из Евроопта с доставкой</h1>
+            <p>Более 10 000 товаров прямо к вашей двери</p>
+            <button class="cta-button">Начать покупки</button>
+        </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="categories">
+        <h2>Категории товаров</h2>
+        <div class="categories-grid">
+            <div class="category-card" data-category="fruits">
+                <i class="fas fa-apple-alt"></i>
+                <span>Фрукты и овощи</span>
+            </div>
+            <div class="category-card" data-category="meat">
+                <i class="fas fa-drumstick-bite"></i>
+                <span>Мясо и птица</span>
+            </div>
+            <div class="category-card" data-category="dairy">
+                <i class="fas fa-cheese"></i>
+                <span>Молочные продукты</span>
+            </div>
+            <div class="category-card" data-category="bakery">
+                <i class="fas fa-bread-slice"></i>
+                <span>Хлеб и выпечка</span>
+            </div>
+            <div class="category-card" data-category="drinks">
+                <i class="fas fa-wine-bottle"></i>
+                <span>Напитки</span>
+            </div>
+            <div class="category-card" data-category="frozen">
+                <i class="fas fa-snowflake"></i>
+                <span>Замороженные</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Grid -->
+    <section class="products">
+        <h2>Популярные товары</h2>
+        <div class="products-grid" id="productsGrid">
+            <!-- Products will be loaded here by JavaScript -->
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features">
+        <div class="feature">
+            <i class="fas fa-shipping-fast"></i>
+            <h3>Быстрая доставка</h3>
+            <p>Доставка в течение 2 часов</p>
+        </div>
+        <div class="feature">
+            <i class="fas fa-leaf"></i>
+            <h3>Свежие продукты</h3>
+            <p>Только качественные товары</p>
+        </div>
+        <div class="feature">
+            <i class="fas fa-percentage"></i>
+            <h3>Акции Евроопта</h3>
+            <p>Все текущие скидки</p>
+        </div>
+    </section>
+
+    <!-- Cart Modal -->
+    <div class="cart-modal" id="cartModal">
+        <div class="cart-content">
+            <span class="close-cart">&times;</span>
+            <h2>Ваша корзина</h2>
+            <div class="cart-items" id="cartItems">
+                <!-- Cart items will be loaded here -->
+            </div>
+            <div class="cart-total">
+                <strong>Итого: <span id="totalPrice">0</span> руб.</strong>
+                <button class="checkout-btn">Оформить заказ</button>
+            </div>
+        </div>
     </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>EuroDelivery</h3>
+                <p>Доставка продуктов из Евроопта по всей Беларуси</p>
+            </div>
+            <div class="footer-section">
+                <h3>Контакты</h3>
+                <p>+375 (29) 123-45-67</p>
+                <p>info@eurodelivery.by</p>
+            </div>
+            <div class="footer-section">
+                <h3>Время работы</h3>
+                <p>Пн-Вс: 8:00-23:00</p>
+            </div>
+        </div>
+    </footer>
 
     <script src="script.js"></script>
 </body>
