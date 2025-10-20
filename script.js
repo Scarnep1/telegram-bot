@@ -1,170 +1,307 @@
-// Инициализация приложения
+// Mock data for products
+const products = [
+    {
+        id: 1,
+        name: "Яблоки Голден",
+        price: 2.99,
+        category: "fruits",
+        icon: "fas fa-apple-alt"
+    },
+    {
+        id: 2,
+        name: "Куриное филе",
+        price: 8.49,
+        category: "meat",
+        icon: "fas fa-drumstick-bite"
+    },
+    {
+        id: 3,
+        name: "Молоко Простоквашино",
+        price: 1.89,
+        category: "dairy",
+        icon: "fas fa-wine-bottle"
+    },
+    {
+        id: 4,
+        name: "Хлеб Бородинский",
+        price: 1.29,
+        category: "bakery",
+        icon: "fas fa-bread-slice"
+    },
+    {
+        id: 5,
+        name: "Сок Яблочный",
+        price: 2.49,
+        category: "drinks",
+        icon: "fas fa-wine-bottle"
+    },
+    {
+        id: 6,
+        name: "Пельмени Сибирские",
+        price: 5.99,
+        category: "frozen",
+        icon: "fas fa-snowflake"
+    },
+    {
+        id: 7,
+        name: "Бананы",
+        price: 3.49,
+        category: "fruits",
+        icon: "fas fa-apple-alt"
+    },
+    {
+        id: 8,
+        name: "Сыр Российский",
+        price: 6.99,
+        category: "dairy",
+        icon: "fas fa-cheese"
+    }
+];
+
+// Cart functionality
+let cart = [];
+let totalPrice = 0;
+
+// DOM Elements
+const productsGrid = document.getElementById('productsGrid');
+const cartModal = document.getElementById('cartModal');
+const cartItems = document.getElementById('cartItems');
+const totalPriceElement = document.getElementById('totalPrice');
+const cartCount = document.querySelector('.cart-count');
+const cartIcon = document.querySelector('.cart-icon');
+const closeCart = document.querySelector('.close-cart');
+const checkoutBtn = document.querySelector('.checkout-btn');
+
+// Initialize the app
 document.addEventListener('DOMContentLoaded', function() {
-    initializeApp();
+    loadProducts();
+    setupEventListeners();
 });
 
-function initializeApp() {
-    // Инициализация навигации
-    initNavigation();
-    
-    // Инициализация профиля пользователя
-    initUserProfile();
-    
-    // Инициализация графика цены
-    initPriceChart();
-    
-    // Загрузка данных о цене
-    loadPriceData();
-}
-
-// Навигация между вкладками
-function initNavigation() {
-    const navItems = document.querySelectorAll('.nav-item');
-    const tabContents = document.querySelectorAll('.tab-content');
-    
-    navItems.forEach(item => {
-        item.addEventListener('click', function() {
-            const targetTab = this.getAttribute('data-tab');
-            
-            // Обновляем активные элементы навигации
-            navItems.forEach(nav => nav.classList.remove('active'));
-            this.classList.add('active');
-            
-            // Показываем целевую вкладку
-            tabContents.forEach(tab => tab.classList.remove('active'));
-            document.getElementById(targetTab).classList.add('active');
-            
-            // Если переходим на вкладку Price, обновляем данные
-            if (targetTab === 'price') {
-                loadPriceData();
-            }
-        });
+function loadProducts() {
+    productsGrid.innerHTML = '';
+    products.forEach(product => {
+        const productCard = createProductCard(product);
+        productsGrid.appendChild(productCard);
     });
 }
 
-// Инициализация профиля пользователя
-function initUserProfile() {
-    // В реальном приложении здесь будет интеграция с Telegram WebApp
-    const user = {
-        name: 'Telegram User',
-        avatar: 'https://via.placeholder.com/100'
-    };
-    
-    document.getElementById('userName').textContent = user.name;
-    document.getElementById('userAvatar').src = user.avatar;
+function createProductCard(product) {
+    const card = document.createElement('div');
+    card.className = 'product-card';
+    card.innerHTML = `
+        <div class="product-image">
+            <i class="${product.icon}"></i>
+        </div>
+        <div class="product-info">
+            <div class="product-title">${product.name}</div>
+            <div class="product-price">${product.price.toFixed(2)} руб.</div>
+            <button class="add-to-cart" data-id="${product.id}">
+                Добавить в корзину
+            </button>
+        </div>
+    `;
+    return card;
 }
 
-// Инициализация графика
-function initPriceChart() {
-    const ctx = document.getElementById('priceChart').getContext('2d');
+function setupEventListeners() {
+    // Cart icon click
+    cartIcon.addEventListener('click', () => {
+        cartModal.style.display = 'block';
+        updateCartDisplay();
+    });
+
+    // Close cart modal
+    closeCart.addEventListener('click', () => {
+        cartModal.style.display = 'none';
+    });
+
+    // Close modal when clicking outside
+    window.addEventListener('click', (e) => {
+        if (e.target === cartModal) {
+            cartModal.style.display = 'none';
+        }
+    });
+
+    // Add to cart buttons
+    productsGrid.addEventListener('click', (e) => {
+        if (e.target.classList.contains('add-to-cart')) {
+            const productId = parseInt(e.target.getAttribute('data-id'));
+            addToCart(productId);
+        }
+    });
+
+    // Checkout button
+    checkoutBtn.addEventListener('click', checkout);
+
+    // Category filters
+    document.querySelectorAll('.category-card').forEach(card => {
+        card.addEventListener('click', (e) => {
+            const category = e.currentTarget.getAttribute('data-category');
+            filterProducts(category);
+        });
+    });
+
+    // Search functionality
+    const searchInput = document.querySelector('.search-bar input');
+    const searchButton = document.querySelector('.search-bar button');
     
-    // Создаем временные данные для демонстрации
-    const labels = [];
-    const data = [];
-    const now = new Date();
+    searchButton.addEventListener('click', () => {
+        performSearch(searchInput.value);
+    });
     
-    for (let i = 30; i >= 0; i--) {
-        const date = new Date(now);
-        date.setDate(date.getDate() - i);
-        labels.push(date.toLocaleDateString('ru-RU'));
-        data.push(0.1 + Math.random() * 0.1); // Случайные данные
-    }
-    
-    window.priceChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'HMSTR Price',
-                data: data,
-                borderColor: '#007bff',
-                backgroundColor: 'rgba(0, 123, 255, 0.1)',
-                borderWidth: 2,
-                fill: true,
-                tension: 0.4
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false
-                }
-            },
-            scales: {
-                x: {
-                    display: false
-                },
-                y: {
-                    display: false
-                }
-            },
-            interaction: {
-                intersect: false,
-                mode: 'index'
-            }
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            performSearch(searchInput.value);
         }
     });
 }
 
-// Загрузка данных о цене (заглушка - в реальном приложении будет API)
-function loadPriceData() {
-    // Имитация загрузки данных
-    setTimeout(() => {
-        const usdtPrice = (0.15 + Math.random() * 0.05).toFixed(4);
-        const rubPrice = (usdtPrice * 90).toFixed(2); // Примерный курс
-        const change = (Math.random() * 10 - 5).toFixed(2);
-        
-        document.getElementById('currentPriceUSDT').textContent = `$${usdtPrice}`;
-        document.getElementById('currentPriceRUB').textContent = `${rubPrice} ₽`;
-        
-        const changeElement = document.getElementById('priceChange');
-        changeElement.textContent = `${change > 0 ? '+' : ''}${change}%`;
-        changeElement.className = `price-change ${change < 0 ? 'negative' : ''}`;
-        
-        // Обновляем рыночные данные
-        document.getElementById('marketCap').textContent = `$${(usdtPrice * 1000000000).toLocaleString()}`;
-        document.getElementById('totalSupply').textContent = '1,000,000,000 HMSTR';
-        document.getElementById('volume24h').textContent = `$${(usdtPrice * 1000000).toLocaleString()}`;
-    }, 500);
+function addToCart(productId) {
+    const product = products.find(p => p.id === productId);
+    const existingItem = cart.find(item => item.id === productId);
+
+    if (existingItem) {
+        existingItem.quantity++;
+    } else {
+        cart.push({
+            ...product,
+            quantity: 1
+        });
+    }
+
+    updateCartCount();
+    showNotification(`${product.name} добавлен в корзину!`);
 }
 
-// Открытие игры в Telegram
-function openGame(url) {
-    // В реальном приложении будет использоваться Telegram WebApp API
-    window.open(url, '_blank');
+function updateCartCount() {
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    cartCount.textContent = totalItems;
 }
 
-// Обработчики для кнопок временных интервалов
-document.querySelectorAll('.time-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-        document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-        
-        // Здесь будет обновление данных графика по выбранному периоду
-        const timeframe = this.getAttribute('data-time');
-        updateChartTimeframe(timeframe);
+function updateCartDisplay() {
+    cartItems.innerHTML = '';
+    totalPrice = 0;
+
+    cart.forEach(item => {
+        const itemTotal = item.price * item.quantity;
+        totalPrice += itemTotal;
+
+        const cartItemElement = document.createElement('div');
+        cartItemElement.className = 'cart-item';
+        cartItemElement.innerHTML = `
+            <div class="cart-item-info">
+                <div class="cart-item-title">${item.name}</div>
+                <div class="cart-item-price">${item.price.toFixed(2)} руб. × ${item.quantity}</div>
+            </div>
+            <div class="cart-item-quantity">
+                <button class="quantity-btn minus" data-id="${item.id}">-</button>
+                <span>${item.quantity}</span>
+                <button class="quantity-btn plus" data-id="${item.id}">+</button>
+            </div>
+        `;
+        cartItems.appendChild(cartItemElement);
     });
-});
 
-function updateChartTimeframe(timeframe) {
-    // В реальном приложении здесь будет загрузка данных для выбранного периода
-    console.log('Updating chart for timeframe:', timeframe);
+    totalPriceElement.textContent = totalPrice.toFixed(2);
+
+    // Add event listeners for quantity buttons
+    document.querySelectorAll('.quantity-btn.minus').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const id = parseInt(e.target.getAttribute('data-id'));
+            updateQuantity(id, -1);
+        });
+    });
+
+    document.querySelectorAll('.quantity-btn.plus').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const id = parseInt(e.target.getAttribute('data-id'));
+            updateQuantity(id, 1);
+        });
+    });
 }
 
-// Интеграция с Telegram WebApp (раскомментировать при развертывании в Telegram)
-/*
-const tg = window.Telegram.WebApp;
-tg.expand();
-tg.enableClosingConfirmation();
-
-// Получение данных пользователя
-const user = tg.initDataUnsafe?.user;
-if (user) {
-    document.getElementById('userName').textContent = user.first_name || 'Telegram User';
-    if (user.photo_url) {
-        document.getElementById('userAvatar').src = user.photo_url;
+function updateQuantity(productId, change) {
+    const item = cart.find(item => item.id === productId);
+    if (item) {
+        item.quantity += change;
+        if (item.quantity <= 0) {
+            cart = cart.filter(item => item.id !== productId);
+        }
+        updateCartCount();
+        updateCartDisplay();
     }
 }
-*/
+
+function filterProducts(category) {
+    const filteredProducts = category === 'all' ? products : products.filter(product => product.category === category);
+    
+    productsGrid.innerHTML = '';
+    filteredProducts.forEach(product => {
+        const productCard = createProductCard(product);
+        productsGrid.appendChild(productCard);
+    });
+}
+
+function performSearch(query) {
+    const filteredProducts = products.filter(product => 
+        product.name.toLowerCase().includes(query.toLowerCase())
+    );
+    
+    productsGrid.innerHTML = '';
+    filteredProducts.forEach(product => {
+        const productCard = createProductCard(product);
+        productsGrid.appendChild(productCard);
+    });
+}
+
+function checkout() {
+    if (cart.length === 0) {
+        alert('Корзина пуста!');
+        return;
+    }
+
+    alert(`Заказ оформлен! Сумма: ${totalPrice.toFixed(2)} руб.\nСпасибо за покупку!`);
+    cart = [];
+    updateCartCount();
+    updateCartDisplay();
+    cartModal.style.display = 'none';
+}
+
+function showNotification(message) {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #27ae60;
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 5px;
+        z-index: 1001;
+        animation: slideIn 0.3s ease;
+    `;
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
+
+// Add CSS for notification animation
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+`;
+document.head.appendChild(style);
