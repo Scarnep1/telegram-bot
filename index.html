@@ -3,136 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EuroDelivery - Доставка продуктов из Евроопта</title>
+    <title>NeuroAcademy | Обучение нейросетям</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- Header -->
     <header class="header">
-        <nav class="navbar">
-            <div class="nav-container">
-                <div class="logo">
-                    <i class="fas fa-shopping-basket"></i>
-                    <span>EuroDelivery</span>
-                </div>
-                
-                <div class="search-bar">
-                    <input type="text" placeholder="Поиск продуктов...">
-                    <button><i class="fas fa-search"></i></button>
-                </div>
-                
-                <div class="nav-links">
-                    <a href="#" class="nav-link"><i class="fas fa-user"></i> Войти</a>
-                    <a href="#" class="nav-link cart-icon">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span class="cart-count">0</span>
-                    </a>
-                </div>
+        <nav class="nav container">
+            <div class="nav__logo">
+                <h2>NeuroAcademy</h2>
+            </div>
+            <ul class="nav__menu">
+                <li><a href="#courses">Курсы</a></li>
+                <li><a href="#about">О нас</a></li>
+                <li><a href="#resources">Ресурсы</a></li>
+                <li><a href="#community">Сообщество</a></li>
+                <li><a href="#contact" class="btn btn--primary">Начать обучение</a></li>
+            </ul>
+            <div class="nav__toggle">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
         </nav>
     </header>
 
     <!-- Hero Section -->
     <section class="hero">
-        <div class="hero-content">
-            <h1>Свежие продукты из Евроопта с доставкой</h1>
-            <p>Более 10 000 товаров прямо к вашей двери</p>
-            <button class="cta-button">Начать покупки</button>
-        </div>
-    </section>
-
-    <!-- Categories -->
-    <section class="categories">
-        <h2>Категории товаров</h2>
-        <div class="categories-grid">
-            <div class="category-card" data-category="fruits">
-                <i class="fas fa-apple-alt"></i>
-                <span>Фрукты и овощи</span>
+        <div class="container">
+            <div class="hero__content">
+                <h1 class="hero__title">Стань экспертом в нейросетях</h1>
+                <p class="hero__description">Интерактивные курсы, реальные проекты и сообщество профессионалов</p>
+                <div class="hero__buttons">
+                    <a href="#courses" class="btn btn--primary">Начать обучение</a>
+                    <a href="#about" class="btn btn--secondary">Узнать больше</a>
+                </div>
             </div>
-            <div class="category-card" data-category="meat">
-                <i class="fas fa-drumstick-bite"></i>
-                <span>Мясо и птица</span>
-            </div>
-            <div class="category-card" data-category="dairy">
-                <i class="fas fa-cheese"></i>
-                <span>Молочные продукты</span>
-            </div>
-            <div class="category-card" data-category="bakery">
-                <i class="fas fa-bread-slice"></i>
-                <span>Хлеб и выпечка</span>
-            </div>
-            <div class="category-card" data-category="drinks">
-                <i class="fas fa-wine-bottle"></i>
-                <span>Напитки</span>
-            </div>
-            <div class="category-card" data-category="frozen">
-                <i class="fas fa-snowflake"></i>
-                <span>Замороженные</span>
+            <div class="hero__visual">
+                <div class="neural-network"></div>
             </div>
         </div>
     </section>
 
-    <!-- Products Grid -->
-    <section class="products">
-        <h2>Популярные товары</h2>
-        <div class="products-grid" id="productsGrid">
-            <!-- Products will be loaded here by JavaScript -->
+    <!-- Courses Section -->
+    <section id="courses" class="courses">
+        <div class="container">
+            <h2 class="section__title">Наши курсы</h2>
+            <div class="courses__grid">
+                <div class="course-card">
+                    <div class="course-card__icon">🤖</div>
+                    <h3>Нейросети для начинающих</h3>
+                    <p>Основы архитектуры и принципов работы нейросетей</p>
+                    <ul>
+                        <li>Перцептроны и активационные функции</li>
+                        <li>Обучение с учителем и без</li>
+                        <li>Практические задания</li>
+                    </ul>
+                </div>
+                
+                <div class="course-card">
+                    <div class="course-card__icon">🧠</div>
+                    <h3>Глубокое обучение</h3>
+                    <p>CNN, RNN, трансформеры и современные архитектуры</p>
+                    <ul>
+                        <li>Свёрточные сети</li>
+                        <li>Обработка естественного языка</li>
+                        <li>Generative Adversarial Networks</li>
+                    </ul>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-card__icon">⚡</div>
+                    <h3>Продвинутые техники</h3>
+                    <p>Оптимизация, интерпретация и развёртывание моделей</p>
+                    <ul>
+                        <li>Transfer Learning</li>
+                        <li>Explainable AI</li>
+                        <li>MLOps и продакшн</li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- Features -->
-    <section class="features">
-        <div class="feature">
-            <i class="fas fa-shipping-fast"></i>
-            <h3>Быстрая доставка</h3>
-            <p>Доставка в течение 2 часов</p>
-        </div>
-        <div class="feature">
-            <i class="fas fa-leaf"></i>
-            <h3>Свежие продукты</h3>
-            <p>Только качественные товары</p>
-        </div>
-        <div class="feature">
-            <i class="fas fa-percentage"></i>
-            <h3>Акции Евроопта</h3>
-            <p>Все текущие скидки</p>
+    <!-- Additional Sections -->
+    <section id="resources" class="resources">
+        <div class="container">
+            <h2 class="section__title">Дополнительные ресурсы</h2>
+            <div class="resources__content">
+                <div class="resource-tabs">
+                    <button class="tab-btn active">Статьи</button>
+                    <button class="tab-btn">Видео</button>
+                    <button class="tab-btn">Инструменты</button>
+                </div>
+                <div class="tab-content">
+                    <div class="resource-grid">
+                        <div class="resource-item">
+                            <h4>Глоссарий терминов</h4>
+                            <p>Полный словарь специализированных терминов</p>
+                        </div>
+                        <div class="resource-item">
+                            <h4>Сравнение фреймворков</h4>
+                            <p>TensorFlow vs PyTorch vs Keras</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
-
-    <!-- Cart Modal -->
-    <div class="cart-modal" id="cartModal">
-        <div class="cart-content">
-            <span class="close-cart">&times;</span>
-            <h2>Ваша корзина</h2>
-            <div class="cart-items" id="cartItems">
-                <!-- Cart items will be loaded here -->
-            </div>
-            <div class="cart-total">
-                <strong>Итого: <span id="totalPrice">0</span> руб.</strong>
-                <button class="checkout-btn">Оформить заказ</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>EuroDelivery</h3>
-                <p>Доставка продуктов из Евроопта по всей Беларуси</p>
-            </div>
-            <div class="footer-section">
-                <h3>Контакты</h3>
-                <p>+375 (29) 123-45-67</p>
-                <p>info@eurodelivery.by</p>
-            </div>
-            <div class="footer-section">
-                <h3>Время работы</h3>
-                <p>Пн-Вс: 8:00-23:00</p>
-            </div>
-        </div>
-    </footer>
 
     <script src="script.js"></script>
 </body>
