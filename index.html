@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game & Crypto Hub</title>
+    <title>GameHub - Мир игр Telegram</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
@@ -14,62 +14,57 @@
             <div class="header-content">
                 <h1 class="logo">🎮 GameHub</h1>
                 <div class="user-info">
-                    <span id="userName">Гость</span>
-                    <div class="balance">Баланс: <span id="userBalance">0</span> ₽</div>
+                    <span id="user-name">Игрок</span>
+                    <div class="coins">🪙 <span id="user-coins">0</span></div>
                 </div>
             </div>
         </header>
 
         <!-- Main Content -->
         <main class="main">
-            <!-- Welcome Section -->
-            <section class="welcome-section">
-                <div class="welcome-card">
-                    <h2>Добро пожаловать в GameHub! 🎯</h2>
-                    <p>Играйте в лучшие игры и зарабатывайте криптовалюту</p>
-                    <div class="referral-link">
-                        <span>Ваша реферальная ссылка:</span>
-                        <div class="link-box" id="referralLink">
-                            https://t.me/gamehub_bot?start=ref_12345
-                        </div>
-                        <button class="copy-btn" onclick="copyReferralLink()">Копировать</button>
+            <!-- Hero Section -->
+            <section class="hero">
+                <div class="hero-content">
+                    <h2>Добро пожаловать в мир игр!</h2>
+                    <p>Играй, зарабатывай монеты и получай бонусы</p>
+                    <div class="referral-banner">
+                        <p>🎁 Пригласи друзей и получи 100 монет!</p>
+                        <button class="btn-secondary" onclick="copyReferral()">
+                            Скопировать реф-ссылку
+                        </button>
                     </div>
                 </div>
             </section>
 
             <!-- Games Grid -->
             <section class="games-section">
-                <h2 class="section-title">🎮 Популярные игры</h2>
-                <div class="games-grid" id="gamesGrid">
+                <h3>🔥 Популярные игры</h3>
+                <div class="games-grid" id="games-grid">
                     <!-- Games will be loaded here -->
                 </div>
             </section>
 
             <!-- Crypto Section -->
             <section class="crypto-section">
-                <h2 class="section-title">💰 Криптобиржи</h2>
-                <div class="crypto-grid" id="cryptoGrid">
-                    <!-- Crypto exchanges will be loaded here -->
-                </div>
-            </section>
-
-            <!-- Stats Section -->
-            <section class="stats-section">
-                <div class="stats-card">
-                    <h3>Ваша статистика</h3>
-                    <div class="stats-grid">
-                        <div class="stat-item">
-                            <span class="stat-value" id="invitedFriends">0</span>
-                            <span class="stat-label">Приглашено друзей</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-value" id="gamesPlayed">0</span>
-                            <span class="stat-label">Сыграно игр</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-value" id="totalEarned">0 ₽</span>
-                            <span class="stat-label">Заработано</span>
-                        </div>
+                <h3>💎 Крипто-бонусы</h3>
+                <div class="crypto-grid">
+                    <div class="crypto-card" onclick="openCrypto('binance')">
+                        <div class="crypto-icon">₿</div>
+                        <h4>Binance</h4>
+                        <p>Получи 20% скидку на комиссию</p>
+                        <span class="bonus-badge">+50 монет</span>
+                    </div>
+                    <div class="crypto-card" onclick="openCrypto('bybit')">
+                        <div class="crypto-icon">Β</div>
+                        <h4>Bybit</h4>
+                        <p>До $30,000 бонусов</p>
+                        <span class="bonus-badge">+75 монет</span>
+                    </div>
+                    <div class="crypto-card" onclick="openCrypto('okx')">
+                        <div class="crypto-icon">Ⓚ</div>
+                        <h4>OKX</h4>
+                        <p>Бесплатные крипто-награды</p>
+                        <span class="bonus-badge">+60 монет</span>
                     </div>
                 </div>
             </section>
@@ -78,16 +73,13 @@
         <!-- Navigation -->
         <nav class="bottom-nav">
             <button class="nav-btn active" onclick="showSection('games')">
-                <span>🎮</span>
-                Игры
+                🎮 Игры
             </button>
             <button class="nav-btn" onclick="showSection('crypto')">
-                <span>💰</span>
-                Крипто
+                💰 Крипто
             </button>
             <button class="nav-btn" onclick="showSection('profile')">
-                <span>👤</span>
-                Профиль
+                👤 Профиль
             </button>
         </nav>
     </div>
