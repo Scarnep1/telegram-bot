@@ -1,124 +1,114 @@
-// Initialize Telegram Web App
-const tg = window.Telegram.WebApp;
+// Telegram Web App initialization
+let tg = window.Telegram.WebApp;
+
+// Initialize the app
 tg.expand();
 tg.enableClosingConfirmation();
+tg.MainButton.setText("Открыть игры");
+tg.MainButton.show();
 
 // User data
 let userData = {
-    id: tg.initDataUnsafe?.user?.id || '12345',
-    name: tg.initDataUnsafe?.user?.first_name || 'Гость',
-    balance: 150,
-    invitedFriends: 3,
-    gamesPlayed: 12,
-    totalEarned: 450
+    id: tg.initDataUnsafe?.user?.id || Math.random().toString(36).substr(2, 9),
+    name: tg.initDataUnsafe?.user?.first_name || "Игрок",
+    coins: 0,
+    referralCode: generateReferralCode()
 };
 
 // Games data with referral links
 const games = [
     {
         id: 1,
-        name: "Hamster Kombat",
+        name: "Hamster Combat",
         icon: "🐹",
-        description: "Тапай и зарабатывай",
-        referralLink: "https://t.me/hamster_kombat_bot?start=ref_gamehub",
-        bonus: "+1000 монет"
+        description: "Бой хомяков в Telegram",
+        referralLink: "https://t.me/hamster_combat_bot/start?startapp=ref_" + userData.referralCode,
+        coinReward: 10
     },
     {
         id: 2,
-        name: "Notcoin",
-        icon: "🪙",
-        description: "Кликер с монетками",
-        referralLink: "https://t.me/notcoin_bot?start=ref_gamehub",
-        bonus: "+500 NOT"
+        name: "Crypto Whales",
+        icon: "🐋",
+        description: "Зарабатывай китами",
+        referralLink: "https://t.me/cryptowhalesbot/start?startapp=ref_" + userData.referralCode,
+        coinReward: 15
     },
     {
         id: 3,
-        name: "Blum",
-        icon: "🌸",
-        description: "Ферма токенов",
-        referralLink: "https://t.me/blum_bot?start=ref_gamehub",
-        bonus: "+1000 очков"
+        name: "Coin Puzzle",
+        icon: "🧩",
+        description: "Головоломки с криптой",
+        referralLink: "https://t.me/coinpuzzlebot/start?startapp=ref_" + userData.referralCode,
+        coinReward: 8
     },
     {
         id: 4,
-        name: "Dotcoin",
-        icon: "⚫",
-        description: "Собирай точки",
-        referralLink: "https://t.me/dotcoin_bot?start=ref_gamehub",
-        bonus: "+500 точек"
+        name: "Tower Defense",
+        icon: "🏰",
+        description: "Защищай башню",
+        referralLink: "https://t.me/towerdefensebot/start?startapp=ref_" + userData.referralCode,
+        coinReward: 12
     },
     {
         id: 5,
-        name: "Catizen",
-        icon: "🐱",
-        description: "Кошачья ферма",
-        referralLink: "https://t.me/catizen_bot?start=ref_gamehub",
-        bonus: "+3 котика"
+        name: "Crypto Rally",
+        icon: "🏎️",
+        description: "Гонки за криптой",
+        referralLink: "https://t.me/cryptorallybot/start?startapp=ref_" + userData.referralCode,
+        coinReward: 20
     },
     {
         id: 6,
-        name: "Yescoin",
-        icon: "👍",
-        description: "Свайпай и зарабатывай",
-        referralLink: "https://t.me/yescoin_bot?start=ref_gamehub",
-        bonus: "+1000 YES"
+        name: "Memes Battle",
+        icon: "😂",
+        description: "Битва мемов",
+        referralLink: "https://t.me/memesbattlebot/start?startapp=ref_" + userData.referralCode,
+        coinReward: 5
     }
 ];
 
-// Crypto exchanges data
-const cryptoExchanges = [
-    {
-        id: 1,
-        name: "Binance",
-        icon: "🟡",
-        description: "Крупнейшая биржа",
-        referralLink: "https://accounts.binance.com/register?ref=GAMEHUB123",
-        bonus: "10% скидка на комиссии"
+// Crypto exchanges with referral links
+const cryptoExchanges = {
+    binance: {
+        link: "https://accounts.binance.com/register?ref=" + userData.referralCode + "B",
+        coinReward: 50
     },
-    {
-        id: 2,
-        name: "Bybit",
-        icon: "🔵",
-        description: "Торговая платформа",
-        referralLink: "https://www.bybit.com/register?ref=GAMEHUB456",
-        bonus: "$30 бонус"
+    bybit: {
+        link: "https://www.bybit.com/register?ref=" + userData.referralCode + "Y",
+        coinReward: 75
     },
-    {
-        id: 3,
-        name: "OKX",
-        icon: "🟢",
-        description: "Многофункциональная",
-        referralLink: "https://www.okx.com/join/GAMEHUB789",
-        bonus: "$50 приветственный"
-    },
-    {
-        id: 4,
-        name: "Gate.io",
-        icon: "🚪",
-        description: "Международная биржа",
-        referralLink: "https://www.gate.io/signup/GAMEHUB012",
-        bonus: "10% кэшбек"
+    okx: {
+        link: "https://www.okx.com/join/" + userData.referralCode + "X",
+        coinReward: 60
     }
-];
+};
 
-// Initialize app
+// Initialize the app
 function initApp() {
     updateUserInfo();
     loadGames();
-    loadCryptoExchanges();
-    updateStats();
-    generateReferralLink();
+    loadUserData();
+    
+    // Add Telegram event listeners
+    tg.MainButton.onClick(() => {
+        showSection('games');
+    });
 }
 
-// Update user information
+// Generate random referral code
+function generateReferralCode() {
+    return Math.random().toString(36).substr(2, 8).toUpperCase();
+}
+
+// Update user info in UI
 function updateUserInfo() {
-    document.getElementById('userName').textContent = userData.name;
-    document.getElementById('userBalance').textContent = userData.balance;
+    document.getElementById('user-name').textContent = userData.name;
+    document.getElementById('user-coins').textContent = userData.coins;
 }
 
-// Load games grid
+// Load games into the grid
 function loadGames() {
-    const gamesGrid = document.getElementById('gamesGrid');
+    const gamesGrid = document.getElementById('games-grid');
     gamesGrid.innerHTML = '';
 
     games.forEach(game => {
@@ -128,116 +118,103 @@ function loadGames() {
         
         gameCard.innerHTML = `
             <div class="game-icon">${game.icon}</div>
-            <h3>${game.name}</h3>
+            <h4>${game.name}</h4>
             <p>${game.description}</p>
-            <div class="bonus-badge">${game.bonus}</div>
+            <span class="coin-reward">+${game.coinReward} 🪙</span>
         `;
         
         gamesGrid.appendChild(gameCard);
     });
 }
 
-// Load crypto exchanges
-function loadCryptoExchanges() {
-    const cryptoGrid = document.getElementById('cryptoGrid');
-    cryptoGrid.innerHTML = '';
-
-    cryptoExchanges.forEach(exchange => {
-        const cryptoCard = document.createElement('div');
-        cryptoCard.className = 'crypto-card';
-        cryptoCard.onclick = () => openCryptoExchange(exchange);
-        
-        cryptoCard.innerHTML = `
-            <div class="crypto-icon">${exchange.icon}</div>
-            <h3>${exchange.name}</h3>
-            <p>${exchange.description}</p>
-            <div class="bonus-badge">${exchange.bonus}</div>
-        `;
-        
-        cryptoGrid.appendChild(cryptoCard);
-    });
-}
-
-// Open game with referral
+// Open game with referral link
 function openGame(game) {
+    // Add coins to user
+    userData.coins += game.coinReward;
+    updateUserInfo();
+    saveUserData();
+    
+    // Open game in Telegram
+    tg.openTelegramLink(game.referralLink);
+    
+    // Show success message
     tg.showPopup({
-        title: `Запуск ${game.name}`,
-        message: `Вы получите бонус: ${game.bonus}. Перейти по реферальной ссылке?`,
-        buttons: [
-            {id: 'cancel', type: 'cancel', text: 'Отмена'},
-            {id: 'open', type: 'default', text: 'Открыть игру'}
-        ]
-    }, (buttonId) => {
-        if (buttonId === 'open') {
-            // In real app, this would track the click
-            trackReferralClick('game', game.id);
-            window.open(game.referralLink, '_blank');
-        }
+        title: '🎉 Отлично!',
+        message: `Вы получили ${game.coinReward} монет за запуск игры!`,
+        buttons: [{ type: 'ok' }]
     });
 }
 
 // Open crypto exchange
-function openCryptoExchange(exchange) {
-    tg.showPopup({
-        title: `Регистрация на ${exchange.name}`,
-        message: `Бонус при регистрации: ${exchange.bonus}. Перейти по реферальной ссылке?`,
-        buttons: [
-            {id: 'cancel', type: 'cancel', text: 'Отмена'},
-            {id: 'open', type: 'default', text: 'Открыть'}
-        ]
-    }, (buttonId) => {
-        if (buttonId === 'open') {
-            trackReferralClick('crypto', exchange.id);
-            window.open(exchange.referralLink, '_blank');
-        }
-    });
+function openCrypto(exchange) {
+    const cryptoData = cryptoExchanges[exchange];
+    
+    if (cryptoData) {
+        // Add coins to user
+        userData.coins += cryptoData.coinReward;
+        updateUserInfo();
+        saveUserData();
+        
+        // Open exchange
+        tg.openLink(cryptoData.link);
+        
+        // Show success message
+        tg.showPopup({
+            title: '💎 Бонус получен!',
+            message: `Вы получили ${cryptoData.coinReward} монет за регистрацию!`,
+            buttons: [{ type: 'ok' }]
+        });
+    }
 }
 
 // Copy referral link
 function copyReferralLink() {
-    const link = document.getElementById('referralLink').textContent;
-    navigator.clipboard.writeText(link).then(() => {
-        tg.showPopup({
-            title: 'Успешно!',
-            message: 'Реферальная ссылка скопирована в буфер обмена'
-        });
+    const referralLink = `https://t.me/your_bot_username?start=${userData.referralCode}`;
+    
+    // In real app, you would copy to clipboard
+    tg.showPopup({
+        title: '📋 Реферальная ссылка',
+        message: `Ваша ссылка: t.me/your_bot?start=${userData.referralCode}\n\nПоделитесь с друзьями и получайте бонусы!`,
+        buttons: [{ type: 'ok' }]
     });
 }
 
-// Generate referral link
-function generateReferralLink() {
-    const baseUrl = "https://t.me/gamehub_bot?start=ref_";
-    const referralLink = baseUrl + userData.id;
-    document.getElementById('referralLink').textContent = referralLink;
-}
-
-// Update statistics
-function updateStats() {
-    document.getElementById('invitedFriends').textContent = userData.invitedFriends;
-    document.getElementById('gamesPlayed').textContent = userData.gamesPlayed;
-    document.getElementById('totalEarned').textContent = userData.totalEarned + ' ₽';
-}
-
-// Track referral clicks (mock function)
-function trackReferralClick(type, id) {
-    console.log(`Tracked ${type} referral click for ID: ${id}`);
-    // In real app, send to analytics
-}
-
-// Section navigation
+// Show different sections
 function showSection(section) {
-    // Update active nav button
+    // Remove active class from all nav buttons
     document.querySelectorAll('.nav-btn').forEach(btn => {
         btn.classList.remove('active');
     });
-    event.currentTarget.classList.add('active');
     
-    // In real app, implement section switching
+    // Add active class to clicked button
+    event.target.classList.add('active');
+    
+    // In a real app, you would show/hide different sections
     tg.showPopup({
-        title: 'Навигация',
-        message: `Переход в раздел: ${section}`
+        title: '🔧 В разработке',
+        message: `Раздел "${section}" скоро будет доступен!`,
+        buttons: [{ type: 'ok' }]
     });
 }
 
-// Initialize when page loads
+// Save user data (in real app - to backend)
+function saveUserData() {
+    localStorage.setItem('gamehub_user', JSON.stringify(userData));
+}
+
+// Load user data
+function loadUserData() {
+    const saved = localStorage.getItem('gamehub_user');
+    if (saved) {
+        userData = { ...userData, ...JSON.parse(saved) };
+        updateUserInfo();
+    }
+}
+
+// Copy referral function (simplified)
+function copyReferral() {
+    copyReferralLink();
+}
+
+// Initialize app when loaded
 document.addEventListener('DOMContentLoaded', initApp);
